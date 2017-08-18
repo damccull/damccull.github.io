@@ -57,7 +57,7 @@ A middleware is a module that can be inserted into the startup sequence and is r
 
 All of these components must be used together in the auth system in order to successfully authenticate and authorize a user to access a resource. The process begins with the unauthenticated user sending a request for a resource that requires authorization to access.
 
-<img src="/images/2017-Aug-17-aspnetcore-auth-system-demystified_auth-flow.svg" />
+<img src="/images/aspnetcore-auth-system-demystified_auth-flow.svg" />
 
 1. The request arrives at the server.
 2. The authentication middleware calls the default handler's Authenticate method and populates the HttpContext.User object with any available information.
