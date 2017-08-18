@@ -23,7 +23,7 @@ There is a component that exists in ASP.NET Core that conjures up an enchanted s
 
 While trying to figure out how to fix an error in my code, I happened to ask the right question at the right time on the right Slack channel.  David Fowl, who happens to be one of the core maintainers of aspnetcore, decided to give everyone present a lesson on how the authentication and authorization system (auth system, from now on) works in ASP.NET Core 2.0. This article is based on the information in his impromptu lesson.
 
-Understanding the system first requires understanding its components and behaviors. They can be broken down into verbs, authentication handlers, and middleware. I will cover each of these individually and then demonstrate how they work together in an example auth request.
+Understanding the system first requires understanding its components and behaviors. They can be broken down into verbs, authentication handlers, and middleware. I will cover each of these individually and then demonstrate how they work together in an example auth request. Since ASP.NET Core's default authentication handler is the Cookies handler, these examples will use cookie authentication.
 
 ## Verbs
 
@@ -68,4 +68,4 @@ All of these components must be used together in the auth system in order to suc
 7. Once the signin authority directs the user back to the app, the app checks if the user is authorized to view the page.
 8. If the user is authorized, it displays the page, otherwise it displays a 'not authorized' page.
 
-The auth system is interesting and well designed. It's very extensible and will easily work with custom authentication handlers. Understanding how this system works under the hood is the first step in using it beyond the defaults in the templates. All kinds of custom authentication processes are possible by using the components themselves instead of just relying on the templates and convenience methods. Now go write code. 
+The auth system is interesting and well designed. It's very extensible and will easily work with custom authentication handlers. Understanding how this system works under the hood is the first step in using it beyond the defaults in the templates. All kinds of custom authentication processes are possible by using the components themselves instead of just relying on the templates and convenience methods. Now go write code.
