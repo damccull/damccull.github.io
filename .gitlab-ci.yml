@@ -1,14 +1,5 @@
 before_script:
     - git submodule update --init --recursive
-    - mkdir -Force ..\Wyam
-    - mkdir -Force ..\output
-    #Get the version of latest Wyam
-    - Invoke-WebRequest "https://raw.githubusercontent.com/Wyamio/Wyam/master/RELEASE" -outfile ..\Wyam\wyamversion.txt
-    - $WYAMVERSION = get-content ..\wyam\wyamversion.txt
-    - write-host $WYAMVERSION
-    #Get and unzip the latest version of Wyam
-    - Invoke-WebRequest "https://github.com/Wyamio/Wyam/releases/download/$WYAMVERSION/Wyam-$WYAMVERSION.zip" -OutFile ..\Wyam\Wyam.zip
-    - 7z x "-o..\Wyam" "-aoa" ..\Wyam\Wyam.zip -r
 
 stages:
   - build
@@ -22,8 +13,17 @@ buildBlog:
   only:
     - master
   script:
+    - mkdir -Force ..\Wyam
+    - mkdir -Force ..\output
+    #Get the version of latest Wyam
+    - Invoke-WebRequest "https://raw.githubusercontent.com/Wyamio/Wyam/master/RELEASE" -outfile ..\Wyam\wyamversion.txt
+    - $WYAMVERSION = get-content ..\wyam\wyamversion.txt
+    - write-host $WYAMVERSION
+    #Get and unzip the latest version of Wyam
+    - Invoke-WebRequest "https://github.com/Wyamio/Wyam/releases/download/$WYAMVERSION/Wyam-$WYAMVERSION.zip" -OutFile ..\Wyam\Wyam.zip
+    - 7z x "-o..\Wyam" "-aoa" ..\Wyam\Wyam.zip -r
     - ..\Wyam\wyam --output ..\output
-  
+
 
 pages:
     stage: deploy
