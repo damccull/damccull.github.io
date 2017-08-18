@@ -3,8 +3,8 @@
 // Customize your settings and add new ones here
 Settings[Keys.Host] = "digitalmccullough.com";
 Settings[Keys.LinkHideExtensions] = false; //Gitlab doesn't support serving files without an extension
-Settings[BlogKeys.Title] = "Blog";
-Settings[BlogKeys.Description] = "Free-time Programmer";
-Settings[BlogKeys.Intro] = "Read this stuff I wrote.";
+Settings[BlogKeys.Title] = "Free-time Programmer";
+Settings[BlogKeys.Description] = "Read this stuff I wrote";
+Settings[BlogKeys.Intro] = "on my blog";
 
 // Add any pipeline customizations here
