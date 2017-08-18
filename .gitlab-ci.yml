@@ -1,0 +1,39 @@
+before_script:
+    - git submodule update --init --recursive
+    - mkdir -Force ..\Wyam
+    - mkdir -Force ..\output
+    #Get the version of latest Wyam
+    - Invoke-WebRequest "https://raw.githubusercontent.com/Wyamio/Wyam/master/RELEASE" -outfile ..\Wyam\wyamversion.txt
+    - $WYAMVERSION = get-content ..\wyam\wyamversion.txt
+    - write-host $WYAMVERSION
+    #Get and unzip the latest version of Wyam
+    - Invoke-WebRequest "https://github.com/Wyamio/Wyam/releases/download/$WYAMVERSION/Wyam-$WYAMVERSION.zip" -OutFile ..\Wyam\Wyam.zip
+    - 7z x "-o..\Wyam" "-aoa" ..\Wyam\Wyam.zip -r
+
+stages:
+  - build
+  - deploy
+
+
+buildBlog:
+  stage: build
+  tags:
+    - windows
+  only:
+    - master
+  script:
+    - ..\Wyam\wyam --output ..\output
+  
+
+pages:
+    stage: deploy
+    tags:
+      - windows
+    only:
+      - master
+    script:
+      - mkdir -Force public
+      - mv ..\output\* public
+    artifacts:
+      paths:
+        - public
