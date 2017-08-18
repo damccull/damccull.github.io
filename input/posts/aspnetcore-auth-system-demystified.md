@@ -67,3 +67,5 @@ All of these components must be used together in the auth system in order to suc
 6. If the user was not, the handler calls Challenge, redirecting to the appropriate signin authority.
 7. Once the signin authority directs the user back to the app, the app checks if the user is authorized to view the page.
 8. If the user is authorized, it displays the page, otherwise it displays a 'not authorized' page.
+
+The auth system is interesting and well designed. It's very extensible and will easily work with custom authentication handlers. Understanding how this system works under the hood is the first step in using it beyond the defaults in the templates. All kinds of custom authentication processes are possible by using the components themselves instead of just relying on the templates and convenience methods. Now go write code. 
