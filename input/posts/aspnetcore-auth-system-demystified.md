@@ -21,7 +21,7 @@ Tags:
 
 There is a component that exists in ASP.NET Core that conjures up an enchanted shield that protects portions (or all) of your website from unauthorized access. Like many people, I have used this component from the beginning of my journey, but have never understood it. It was conjured up by a wizard and provided a magical barrier between my website and the world. That’s not how it really works, of course, but without the right knowledge, it might as well.
 
-While trying to figure out how to fix an error in my code, I happened to ask the right question at the right time on the right Slack channel.  David Fowl, who happens to be one of the core maintainers of aspnetcore, decided to give everyone present a lesson on how the authentication and authorization system (auth system, from now on) works in ASP.NET Core 2.0. This article is based on the information in his impromptu lesson.
+While trying to figure out how to fix an error in my code, I happened to ask the right question at the right time on the right Slack channel.  David Fowler, who happens to be one of the core maintainers of aspnetcore, decided to give everyone present a lesson on how the authentication and authorization system (auth system, from now on) works in ASP.NET Core 2.0. This article is based on the information in his impromptu lesson.
 
 Understanding the system first requires understanding its components and behaviors. They can be broken down into verbs, authentication handlers, and middleware. I will cover each of these individually and then demonstrate how they work together in an example auth request. Since ASP.NET Core's default authentication handler is the Cookies handler, these examples will use cookie authentication.
 
