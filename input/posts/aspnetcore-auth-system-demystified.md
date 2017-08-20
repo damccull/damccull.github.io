@@ -68,9 +68,9 @@ Here is an example flow for cookies authentication:
 3. The request arrives at the controller action.
 4. If the action is not decorated with the `[Authorize]` attribute, display the page and stop here.
 5. If the action **is** decorated with `[Authorize]`, the auth filter checks if the user was authenticated.
-6. If the user was not, the auth handler calls Challenge, redirecting to the appropriate signin authority.
-7. Once the signin authority directs the user back to the app, the app checks if the user is authorized to view the page.
-8. If the user is authorized, it displays the page, otherwise it calls Forbit, which displays a 'not authorized' page.
+6. If the user was not, the auth filter calls Challenge, redirecting to the appropriate signin authority.
+7. Once the signin authority directs the user back to the app, the auth filter checks if the user is authorized to view the page.
+8. If the user is authorized, it displays the page, otherwise it calls Forbid, which displays a 'not authorized' page.
 
 ## Code Example
 
