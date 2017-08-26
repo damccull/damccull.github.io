@@ -3,6 +3,7 @@ Published: 8/18/2017 02:32
 Tags:
     - ASP.Net Core
     - Lesson
+Lead: Gain a deeper understanding of how the ASP.NET Core 2.0 authentication system works under the covers.
 ---
 <style>
   .note {
