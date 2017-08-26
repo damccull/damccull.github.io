@@ -1,4 +1,5 @@
 #recipe Blog
+#theme CleanBlog
 
 // Customize your settings and add new ones here
 Settings[Keys.Host] = "digitalmccullough.com";
