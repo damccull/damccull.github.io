@@ -60,7 +60,7 @@ All of these components must be used together in the auth system in order to suc
 
 Here is an example flow for cookies authentication:
 
-<img src="/images/aspnetcore-auth-system-demystified_auth-flow.svg" />
+<img src="/images/aspnetcore-auth-system-demystified/aspnetcore-auth-system-demystified_auth-flow.svg" />
 
 1. The request arrives at the server.
 2. The authentication middleware calls the default handler's Authenticate method and populates the HttpContext.User object with any available information.
