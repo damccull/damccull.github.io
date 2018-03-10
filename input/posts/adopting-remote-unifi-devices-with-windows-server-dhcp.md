@@ -1,4 +1,4 @@
-Title: Adopting UniFi Access Points on Different Subnets using Windows DHCP Server
+Title: Adopting Remote UniFi Devices with Windows Server DHCP
 Published: 3/9/2018 03:08
 Tags:
     - Ubiquiti
