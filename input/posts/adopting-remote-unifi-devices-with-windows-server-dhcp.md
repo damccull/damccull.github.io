@@ -4,7 +4,7 @@ Tags:
     - Ubiquiti
     - UniFi
     - Networking
-Lead: Learn to use a vendor-specific DHCP Option 43 to inform UniFi Access Points about a UniFi Controller on another network.
+Lead: Learn to use a vendor-specific DHCP Option 43 to inform UniFi devices about a UniFi Controller on another network.
 ---
 <style>
 
@@ -31,16 +31,16 @@ table, th, td {
 </style>
 
 # Introduction
-UniFi Access Points (APs) are fantastic, but can be difficult to adopt from a UniFi Controller if they never show up. Many different DHCP servers can be configured to tell the APs where the Controller is. You can learn to configure several DHCP servers [here][other-dhcp-stuff] but, to my knowledge, noone has yet written a tutorial on how to do this with Windows DHCP Server. This article aims to teach you just how to do that.
+UniFi Access Points (APs) and other devices are fantastic, but can be difficult to adopt from a UniFi Controller if they never show up. Many different DHCP servers can be configured to tell the devices where the Controller is. You can learn to configure several DHCP servers [here][other-dhcp-stuff] but, to my knowledge, noone has yet written a tutorial on how to do this with Windows DHCP Server. This article aims to teach you just how to do that.
 
-Cisco's document on setting up DHCP option 43 for their branded devices was invaluable to my understanding. Similarly, Ubiquiti's own document on the adoption of remote APs by a UniFi Controller provided the rest of the information I needed. Armed with these two articles I set about experimenting, and ended up successfully adopting APs on a separate network from the controller.
+Cisco's document on setting up DHCP option 43 for their branded devices was invaluable to my understanding. Similarly, Ubiquiti's own document on the adoption of remote devices by a UniFi Controller provided the rest of the information I needed. Armed with these two articles I set about experimenting, and ended up successfully adopting devices on a separate network from the controller.
 
 # Prerequisites
 This article assumes these to be true:
 * You have a working network with two separate subnets
 * A Windows Server handles all DHCP requests for the server
 * You are not using the router's built in DHCP server
-* There is a UniFi AP on a separate subnet from the UniFi Controller
+* There is a UniFi AP (or other UniFi device) on a separate subnet from the UniFi Controller
 
 If you have no met these prerequisites, this will not likely work for you. Setting up these requirements is beyond the scope of this article, but [Youtube](https://youtube.com) has a ton of videos on how to set these devices up in any fashion you wish.
 
@@ -142,9 +142,9 @@ In the `Option Type` window, enter `UniFi Controller`, or some similar name, int
 
 *** INSERT IMAGE OF THE OPTION TYPE WINDOW FILLED OUT *** 
 
-We have no defined both the Ubiquiti vendor class and a predefined option in that class that we can use to point our APs at our UniFi Controller, no matter what subnet they're on.
+We have no defined both the Ubiquiti vendor class and a predefined option in that class that we can use to point our devices at our UniFi Controller, no matter what subnet they're on.
 
-For each subnet that contains APs, we must now add our newly created option to the Scope Options. Begin by right clicking the Scope Options node under one of your Scopes, and choosing `Configure Options`. Click the Advanced tab and choose Ubiquiti under Vendor Class dropdown.
+For each subnet that contains UniFi devices, we must now add our newly created option to the Scope Options. Begin by right clicking the Scope Options node under one of your Scopes, and choosing `Configure Options`. Click the Advanced tab and choose Ubiquiti under Vendor Class dropdown.
 
 There's only one option, so that's obviously the one we want. Make sure it's checked, and then erase the default value in the Binary section.
 
@@ -161,7 +161,7 @@ Once you have all the hexadecimal octets, you need to enter them into the Binary
 Reboot your APs and watch them magically appear in your UniFi Controller.
 
 # Conclusion
-Getting your UniFi APs working with a controller on another subnet can be a bit of a challenge. All the tools needed already exist in one form or another, however, and with just a little research and guidance it shouldn't be too difficult to get yours set up. The bonus to using this method, from what I understand, is that the Ubiquiti Option 43 we created in this tutorial will not be offered unless it's requested via option 60.
+Getting your UniFi devices working with a controller on another network can be a bit of a challenge. All the tools needed already exist in one form or another, however, and with just a little research and guidance it shouldn't be too difficult to get yours set up. The bonus to using this method, from what I understand, is that the Ubiquiti Option 43 we created in this tutorial will not be offered unless it's requested via option 60.
 
 # References
 This is a APA formatted list of references I used to get my own server up and running properly, and to write this article.
