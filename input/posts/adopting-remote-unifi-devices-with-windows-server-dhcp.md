@@ -124,23 +124,23 @@ All these options, in addtion to an IP address, would be sent to the device that
 ### Windows DHCP Server Configuration 
 Open up the DHCP control panel. In Windows Server 2012 and higher, do this from Server Manager by clicking Tools, then DHCP.
 
-*** INSERT IMAGE OF DHCP CONTROL PANEL ***
+<img src="/images/adopting-remote-unifi-devices-with-windows-server-dhcp/dhcp-control-panel.png" />
 
 Right click on the IPV4 node just below your server name, and choose `Define Vendor Classes`. You will be presented with this fancy screen.
 
-*** INSERT IMAGE OF DEFINE VENDOR CLASSES SCREEN ***
+<img src="/images/adopting-remote-unifi-devices-with-windows-server-dhcp/define-vendor-classes-dialog.png" />
 
 Add a new vendor class by clicking the Add button. In the `New Class` window, enter a Display Name (I suggest `Ubiquiti`) and an optionally enter a description. In the ASCII portion of the lowest box type the letters `ubnt`. Make sure there's nothing else, to include white space, in that box. The whole line should read `0000 75 62 6E 74 ubnt` as in the screenshot. Click OK, then Close to close both windows.
 
-*** INSERT IMAGE OF NEW CLASS WINDOW FILLED OUT ***
+<img src="/images/adopting-remote-unifi-devices-with-windows-server-dhcp/new-class-dialog-filled.png" />
 
 Right click the IPV4 node again and choose `Set Predefined Options` from the context menu. In the `Predefined Options and Values` window, choose your new Ubiquiti class from the top dropdown, and click the `Add` button to create a new option.
 
-*** INSERT IMAGE OF PREDEFINED OPTIONS AND VALUES WINDOW FILLED OUT ***
+<img src="/images/adopting-remote-unifi-devices-with-windows-server-dhcp/predefined-options-and-values-dialog.png" />
 
 In the `Option Type` window, enter `UniFi Controller`, or some similar name, into the `Name` box, choose `Binary` in the `Data type` dropdown, and enter `1` in the `Code` box. I chose to write "IP as HEX in the BINARY section: 0a 0a 0a 02" in the `Description` box to remind myself how to enter the controller's IP address later. Click OK, then OK again to accept and close both windows.
 
-*** INSERT IMAGE OF THE OPTION TYPE WINDOW FILLED OUT *** 
+<img src="/images/adopting-remote-unifi-devices-with-windows-server-dhcp/option-type-dialog.png" />
 
 We have no defined both the Ubiquiti vendor class and a predefined option in that class that we can use to point our devices at our UniFi Controller, no matter what subnet they're on.
 
@@ -148,15 +148,21 @@ For each subnet that contains UniFi devices, we must now add our newly created o
 
 There's only one option, so that's obviously the one we want. Make sure it's checked, and then erase the default value in the Binary section.
 
+<img src="/images/adopting-remote-unifi-devices-with-windows-server-dhcp/scope-options-dialog-partial-fill.png" />
+
 We now need to do a little math. The IP address of your UniFi Controller must be converted from decimal to hexadecimal. Windows 8.1 and later (at least) makes this extraordinarily easy with the built in calculator.
 
 Open the windows calculator and go to Programmer mode. Ensure DEC mode is selected and type in the first octet of your UniFi Controller's IP, then see the HEX value displayed. Windows displays the value as a single digit when possible, but when entering it in binary, it must be 2 digits. Prepend a `0` to any single-digit hex values you get. For example, `10` converts to `A`, so you would prepend a 0 and get `0A` for your binary octet.
+
+<img src="/images/adopting-remote-unifi-devices-with-windows-server-dhcp/calculator.png" />
 
 Repeat this for each octet in your IP address, writing down each hex value.
 
 <div class="note">Note: If you are using the older version of calculator (before the Windows Universal Apps version), you may need to click the HEX radio button to see it converted.</div>
 
 Once you have all the hexadecimal octets, you need to enter them into the Binary section of the Data Entry box. Just type the numbers in the order of the octets. An IP of `10.10.10.2`, for instance, would be entered as `0A 0A 0A 02`. Click OK to close the Scope Options window.
+
+<img src="/images/adopting-remote-unifi-devices-with-windows-server-dhcp/scope-options-dialog-filled.png" />
 
 Reboot your APs and watch them magically appear in your UniFi Controller.
 
