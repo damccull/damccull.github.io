@@ -14,7 +14,7 @@ buildBlog:
     - master
   script:
     - mkdir -Force ..\Wyam
-    - mkdir -Force ..\output
+    #- mkdir -Force ..\output
     #Set powershell to use TLS 1.0,1.1,1.2
     - '[Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"'
     #Get the version of latest Wyam
@@ -34,8 +34,9 @@ pages:
     only:
       - master
     script:
-      - mkdir -Force public
-      - mv ..\output\* public
+      - 'if(test-path -path public) {remove-item -force public}'
+      - mkdir -force public
+      - copy-item -recurse ..\output\* public
     artifacts:
       paths:
         - public
