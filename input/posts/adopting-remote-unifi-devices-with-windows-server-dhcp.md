@@ -31,7 +31,7 @@ table, th, td {
 </style>
 
 # Introduction
-UniFi Access Points (APs) and other devices are fantastic, but can be difficult to adopt from a UniFi Controller if they never show up. Many different DHCP servers can be configured to tell the devices where the Controller is. You can learn to configure several DHCP servers [here][other-dhcp-stuff] but, to my knowledge, noone has yet written a tutorial on how to do this with Windows DHCP Server. This article aims to teach you just how to do that.
+UniFi Access Points (APs) and other devices are fantastic, but can be difficult to adopt from a UniFi Controller if they never show up. Many different DHCP servers can be configured to tell the devices where the Controller is. You can learn to configure several DHCP servers [here][other-dhcp-stuff] but, to my knowledge, no one has yet written a tutorial on how to do this with Windows DHCP Server. This article aims to teach you just how to do that.
 
 Cisco's document on setting up DHCP option 43 for their branded devices was invaluable to my understanding. Similarly, Ubiquiti's own document on the adoption of remote devices by a UniFi Controller provided the rest of the information I needed. Armed with these two articles I set about experimenting, and ended up successfully adopting devices on a separate network from the controller.
 
