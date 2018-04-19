@@ -1,5 +1,6 @@
 Title: ASP.NET Core 2.0 Authentication and Authorization System Demystified
 Published: 8/18/2017 02:32
+Updated: 4/18/2018 22:18
 Tags:
     - ASP.Net Core
     - Lesson
