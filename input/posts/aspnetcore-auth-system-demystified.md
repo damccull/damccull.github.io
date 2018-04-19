@@ -24,10 +24,6 @@ Lead: Gain a deeper understanding of how the ASP.NET Core 2.0 authentication sys
     This post was updated on 18 April 2018 at 22:18. Please see the changelog at the bottom for details.
 </div>
 
-<div class="note">
-    This post was updated on 18 April 2018 at 22:18. Please see the changelog at the bottom for details.
-</div>
-
 There is a component that exists in ASP.NET Core that conjures up an enchanted shield that protects portions (or all) of your website from unauthorized access. Like many people, I have used this component from the beginning of my journey, but have never understood it. It was conjured up by a wizard and provided a magical barrier between my website and the world. That’s not how it really works, of course, but without the right knowledge, it might as well.
 
 While trying to figure out how to fix an error in my code, I happened to ask the right question at the right time on the right Slack channel.  David Fowler, who happens to be one of the core maintainers of aspnetcore, decided to give everyone present a lesson on how the authentication system (auth system, from now on) works in ASP.NET Core 2.0. This article is based on the information in his impromptu lesson.
