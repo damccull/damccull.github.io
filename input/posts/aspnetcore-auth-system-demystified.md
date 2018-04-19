@@ -24,6 +24,10 @@ Lead: Gain a deeper understanding of how the ASP.NET Core 2.0 authentication sys
     This post was updated on 18 April 2018 at 22:18. Please see the changelog at the bottom for details.
 </div>
 
+<div class="note">
+    This post was updated on 18 April 2018 at 22:18. Please see the changelog at the bottom for details.
+</div>
+
 There is a component that exists in ASP.NET Core that conjures up an enchanted shield that protects portions (or all) of your website from unauthorized access. Like many people, I have used this component from the beginning of my journey, but have never understood it. It was conjured up by a wizard and provided a magical barrier between my website and the world. That’s not how it really works, of course, but without the right knowledge, it might as well.
 
 While trying to figure out how to fix an error in my code, I happened to ask the right question at the right time on the right Slack channel.  David Fowler, who happens to be one of the core maintainers of aspnetcore, decided to give everyone present a lesson on how the authentication system (auth system, from now on) works in ASP.NET Core 2.0. This article is based on the information in his impromptu lesson.
@@ -115,7 +119,7 @@ Here is an example flow for cookies authentication:
 
 ## Code Example
 
-<div class="note">NOTE: You can access and download the source code for this example app at <a href="https://gitlab.com/free-time-programmer-tutorials/demystify-aspnetcore-auth/tree/v1.0.0" target="\_new">https://gitlab.com/free-time-programmer-tutorials/demystify-aspnetcore-auth/tree/v1.0.0</a>.</div>
+<div class="note">NOTE: You can access and download the source code for this example app at <a href="https://gitlab.com/free-time-programmer-tutorials/demystify-aspnetcore-auth/tree/v1.1.0" target="\_new">https://gitlab.com/free-time-programmer-tutorials/demystify-aspnetcore-auth/tree/v1.1.0</a>.</div>
 
 This example is not intended to be a fully functional web application. It uses a simple POCO to store usernames and passwords, is not a secure or functional way of writing a web application, and does not guarantee proper execution outside of the simple cases of signing in and out. The intention is to illustrate the authentication flow through a code example. In this example I've removed all code unrelated to the topic.
 
@@ -348,4 +352,4 @@ The auth system is interesting and well designed. It's very extensible and will 
   * Fixed typos
   * Changed the Authorized page example from the About page to a Members page and added a view to go with it
 
-[andrew-lock-intro-to-auth]:https://andrewlock.net/introduction-to-authentication-with-asp-net-core/ "Introduction to Authentication with ASP.NET Core - Andrew Lock"
+[andrew-lock-intro-to-auth]: https://andrewlock.net/introduction-to-authentication-with-asp-net-core/ "Introduction to Authentication with ASP.NET Core - Andrew Lock"
