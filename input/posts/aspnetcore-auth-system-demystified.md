@@ -20,11 +20,53 @@ Lead: Gain a deeper understanding of how the ASP.NET Core 2.0 authentication sys
   }
 </style>
 
+<div class="note">
+    This post was updated on 18 April 2018 at 22:18. Please see the changelog at the bottom for details.
+</div>
+
 There is a component that exists in ASP.NET Core that conjures up an enchanted shield that protects portions (or all) of your website from unauthorized access. Like many people, I have used this component from the beginning of my journey, but have never understood it. It was conjured up by a wizard and provided a magical barrier between my website and the world. That’s not how it really works, of course, but without the right knowledge, it might as well.
 
 While trying to figure out how to fix an error in my code, I happened to ask the right question at the right time on the right Slack channel.  David Fowler, who happens to be one of the core maintainers of aspnetcore, decided to give everyone present a lesson on how the authentication system (auth system, from now on) works in ASP.NET Core 2.0. This article is based on the information in his impromptu lesson.
 
-Understanding the system first requires understanding its components and behaviors. They can be broken down into verbs, authentication handlers, and middleware. I will cover each of these individually and then demonstrate how they work together in an example auth request. Since ASP.NET Core's most common authentication handler is the Cookies auth handler, these examples will use cookie authentication.
+I later found an article by Andrew Lock going into details about the claims portion and, after reading his article and doing slightly more research, added the section on Identity.
+
+Understanding the system first requires understanding its components and behaviors. They can be broken down into identity, verbs, authentication handlers, and middleware. I will cover each of these individually and then demonstrate how they work together in an example auth request. Since ASP.NET Core's most common authentication handler is the Cookies auth handler, these examples will use cookie authentication.
+
+## Identity
+
+Key to understanding how authentication works is to first understand what an identity is in ASP.NET Core 2.0. There are three classes which represent the identity of a user: Claim, ClaimsIdentity, and ClaimsPrincipal
+
+### Claims
+
+A *Claim* represents a single fact about the user. It could be the user's first name, last name, age, employer, birth date, or anything else that is true about the user. A single claim will contain only a single piece of information. A claim representing something about a user John Smith could be his first name: John. A second claim would be his last name: Smith.
+
+Claims are represented by the `Claim` class in ASP.Net Core. It's most common constructor accepts two strings: type and value. The 'type' parameter is the name of the claim, while the value is the information the claim is representing about the user.
+
+This code will create two new claims. One of type 'FullName' with a value of 'Dark Helmet', and a second of type `ClaimTypes.Email` and a value of 'dark.helmet@spaceballs.com'. There is a ClaimsType class that contains many string constants that represent industry standard claim types. These are all in URI format, but claim types can be any string.
+
+```cs
+//This claim uses a standard string
+new Claim("FullName","Dark Helmet");
+
+//This claim type expands to 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'
+new Claim(ClaimTypes.Email, "dark.helmet@spaceballs.com");
+```
+
+### ClaimsIdentity
+
+An *Identity* represents a form of identification or, in other words, a single way of proving who you are. In real life this could be a driver's license. In ASP.Net Core, it is a `ClaimsIdentity`. This class represents a single form of digital identification.
+
+A single instance of a `ClaimsIdentity` can be authenticated or not authenticated. According to Andrew Lock's [*Introduction to Authentication with ASP.NET Core*][andrew-lock-intro-to-auth], simply setting the AuthenticationType will automatically ensure the IsAuthenticated property is true. This is because if you have authenticated the identity in any way, then it must, by definition, be authenticated.
+
+An unknown person walking up to you and making various claims about theirself and their life would be equivilent to an unauthenticated `ClaimsIdentity`. Lock writes that this may be useful to allow guest shopping carts (prior to a sign in, perhaps) and similar use cases.
+
+A driver's license contains many claims about its subject: first and last names, birthdate, hair and eye colors, height, and others. Similarly, a `ClaimsIdentity` can contain numerous claims about a user.
+
+### ClaimsPrincipal
+
+A *Principal* represents the actual user. It can contain one or more instances of `ClaimsIdentity`, just like in life a person may have a driver's license, concealed-carry permit, social security card, and a passport. Each of the identities is used for a different purpose and may contain a unique set of claims, but they all identify the same user in some form or another.
+
+To sum up, a `ClaimsPrincipal` represents a user and contains one or more instances of `ClaimsIdentity`, which in turn represent a single form of identification and contain one or more instances of `Claim`, which represents a single piece of information about a user. The `ClaimsPrincipal` is what the `HttpContext.SignInAsync` method accepts and passes to the specified `AuthenticationHandler`.
 
 ## Verbs
 
@@ -46,7 +88,7 @@ There are 5 verbs (these can also be thought of as commands or behaviors) that a
 
 ## Authentication Handlers
 
-Authentication handlers are components that actually implement the behavior of the 5 verbs above. The default auth handler provided by ASP.NET Core is the Cookies authentication handler which implements all 5 of the verbs. It is important to note, however, that a auth handler is not required to implement all of the verbs. Oauth handlers, for instance, do not implement the SignIn verb, but rather pass off that responsibility to another auth handler, such as the Cookies auth handler.
+Authentication handlers are components that actually implement the behavior of the 5 verbs above. The default auth handler provided by ASP.NET Core is the Cookies authentication handler which implements all 5 of the verbs. It is important to note, however, that an auth handler is not required to implement all of the verbs. Oauth handlers, for instance, do not implement the SignIn verb, but rather pass off that responsibility to another auth handler, such as the Cookies auth handler.
 
 Authentication handlers must be registered with the auth system in order to be used and are associated with schemes. A scheme is just a string that identifies a unique auth handler in a dictionary of auth handlers. The default scheme for the Cookies auth handler is “Cookies”, but it can be changed to anything. Multiple auth handlers can be used side by side, and sometimes (like in the earlier example of the Oauth handlers) use functionality provided by other auth handlers.
 
@@ -126,9 +168,10 @@ In order to do anything meaningful with the authentication middleware and handle
 
 ```cs
 public class AccountController : Controller {
-    public List<ApplicationUser> Users { get; set; } = new List<ApplicationUser> {
-        new ApplicationUser{UserName = "darkhelmet", Password = "vespa" },
-        new ApplicationUser{UserName = "prezscroob", Password = "12345"}
+    //A very simplistic user store. This would normally be a database or similar.
+    public List<ApplicationUser> Users => new List<ApplicationUser>() {
+        new ApplicationUser { UserName = "darkhelmet", Password = "vespa" },
+        new ApplicationUser{ UserName = "prezscroob", Password = "12345" }
     };
 
     public IActionResult Login(string returnUrl = null) {
@@ -142,7 +185,7 @@ public class AccountController : Controller {
         if (user == null) {
             return BadRequest(badUserNameOrPasswordMessage);
         }
-        var lookupUser = Users.Where(u => u.UserName == user.UserName).FirstOrDefault();
+        var lookupUser = Users.FirstOrDefault(u => u.UserName == user.UserName);
 
         if (lookupUser?.Password != user.Password) {
             return BadRequest(badUserNameOrPasswordMessage);
@@ -156,16 +199,17 @@ public class AccountController : Controller {
         if(returnUrl == null) {
             returnUrl = TempData["returnUrl"]?.ToString();
         }
+
         if(returnUrl != null) {
             return Redirect(returnUrl);
-        } else {
-            return RedirectToAction(nameof(HomeController.Index), "Home");
         }
+        
+        return RedirectToAction(nameof(HomeController.Index), "Home");
     }
 
     public async Task<IActionResult> Logout() {
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        return RedirectToAction("Index","Home");
+        return RedirectToAction(nameof(HomeController.Index), "Home");
     }
 }
 ```
@@ -173,9 +217,9 @@ public class AccountController : Controller {
 First, the class contains a `List<string> Users` that takes the place of the user store and holds two users. This is not a good method to use in production but makes it easy to demonstrate the authentication code without added complexity.
 
 ```cs
-public List<ApplicationUser> Users { get; set; } = new List<ApplicationUser> {
-    new ApplicationUser{UserName = "darkhelmet", Password = "vespa" },
-    new ApplicationUser{UserName = "prezscroob", Password = "12345"}
+public List<ApplicationUser> Users => new List<ApplicationUser>() {
+    new ApplicationUser { UserName = "darkhelmet", Password = "vespa" },
+    new ApplicationUser{ UserName = "prezscroob", Password = "12345" }
 };
 ```
 
@@ -196,14 +240,16 @@ const string badUserNameOrPasswordMessage = "Username or password is incorrect."
 if (user == null) {
     return BadRequest(badUserNameOrPasswordMessage);
 }
-var lookupUser = Users.Where(u => u.UserName == user.UserName).FirstOrDefault();
+var lookupUser = Users.FirstOrDefault(u => u.UserName == user.UserName);
 
 if (lookupUser?.Password != user.Password) {
     return BadRequest(badUserNameOrPasswordMessage);
 }
 ```
 
-If both of those conditions are true, it creates a new ClaimsIdentity with the Cookies authentication scheme and adds the username to it.
+If both of those conditions are true, it creates a new ClaimsIdentity. The constructor, in this case, is setting the AuthenticationType property of the ClaimsIdentity. According to [Andrew Lock][andrew-lock-intro-to-auth], the AuthenticationType property can be any string and represents how the identity was verified.
+
+In this case, I set the AuthenticationType to the cookies authentication scheme because I am using cookies authentication. However, at this step it does not need to be set to that. I could just as easily set it to "password" or "multipass", or anything else. When using the identity later I could use this property to verify that I trust the authentication method used to authenticate this identity.
 
 ```cs
 var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
@@ -223,9 +269,9 @@ if(returnUrl == null) {
 }
 if(returnUrl != null) {
     return Redirect(returnUrl);
-} else {
-    return RedirectToAction(nameof(HomeController.Index), "Home");
 }
+
+return RedirectToAction(nameof(HomeController.Index), "Home");
 ```
 
 #### Login.cshtml
@@ -239,23 +285,35 @@ The `AccountController` exists, but the users need a way to see the login form a
         User name: <input name="username" type="text" />
         Password: <input name="password" type="password" />
         <input name="submit" value="Login" type="submit" />
-        <input type="hidden" name="returnUrl" value="@Model" />
+        <input type="hidden" name="returnUrl" value="@TempData["returnUrl"]" />
     </form>
 }
 ```
 
 #### class HomeController
-Now that there is an AccountController to log users in and out, there must be something that uses it. This is the `HomeController`'s About method. Notice the `[Authorize]` attribute has been added.
+Now that there is an AccountController to log users in and out, there must be something that uses it. This is the `HomeController`'s Members method. Notice the `[Authorize]` attribute has been added.
 
 ```cs
 [Authorize]
-public IActionResult About() {
-    ViewData["Message"] = "Your application description page.";
-
+public IActionResult Members() {
     return View();
 }
 ```
 The `[Authorize]` attribute decorating this action method will cause the authorization filter to run. That filter will determine if a user has been authenticated and, if not, issue the *Challenge* verb through the authentication handler, which will prompt the user to log in.
+
+#### Members.cshtml
+With almost any new controller action, a view will be needed to show the user something. This is what the Members view looks like behind the curtains.
+
+```cs
+@{
+    ViewBag.Title = "Members Only";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>You must be a member. Congratulations, @User.Identity.Name, on your membership!</p>
+
+```
 
 #### \_Layout.cshtml
 
@@ -276,3 +334,18 @@ The following code was added to the bootstrap menu in the \_Layout.cshtml file a
 The auth system is interesting and well designed. It's very extensible and will easily work with custom authentication handlers. Understanding how this system works under the hood is the first step in using it beyond the template defaults. All kinds of custom authentication processes are possible by using the components themselves instead of just relying on the templates and convenience methods. Now go write code.
 
 [source-code-link]: https://gitlab.com/free-time-programmer-tutorials/demystify-aspnetcore-auth "Get the source code"
+
+## Changelog
+
+* 18 April 2018
+  * Updated some parts of the text to add clarity
+    * Clarified the AuthenticationType property of ClaimsIdentity
+    * Added explanation of Claim, ClaimsIdentity, and ClaimsPrincipal
+  * Updated code samples to match the sample project
+  * Fixed the value of the "returnUrl" input in the Login.cshtml example
+    * Was '@Model', which is an ApplicationUser object
+    * Now '@TempData["returnUrl"]', which is the string that contains the actual URL needed
+  * Fixed typos
+  * Changed the Authorized page example from the About page to a Members page and added a view to go with it
+
+[andrew-lock-intro-to-auth]:https://andrewlock.net/introduction-to-authentication-with-asp-net-core/ "Introduction to Authentication with ASP.NET Core - Andrew Lock"
