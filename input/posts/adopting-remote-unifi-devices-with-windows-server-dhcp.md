@@ -42,7 +42,7 @@ This article assumes these to be true:
 * You are not using the router's built in DHCP server
 * There is a UniFi AP (or other UniFi device) on a separate subnet from the UniFi Controller
 
-If you have no met these prerequisites, this will not likely work for you. Setting up these requirements is beyond the scope of this article, but [Youtube](https://youtube.com) has a ton of videos on how to set these devices up in any fashion you wish.
+If you have no met these prerequisites, this will not likely work for you. Setting up these requirements is beyond the scope of this article, but [YouTube](https://youtube.com) has a ton of videos on how to set these devices up in any fashion you wish.
 
 # The Weeds
 ### Understanding Things
@@ -142,7 +142,7 @@ In the `Option Type` window, enter `UniFi Controller`, or some similar name, int
 
 <img src="/images/adopting-remote-unifi-devices-with-windows-server-dhcp/option-type-dialog.png" />
 
-We have no defined both the Ubiquiti vendor class and a predefined option in that class that we can use to point our devices at our UniFi Controller, no matter what subnet they're on.
+We have now defined both the Ubiquiti vendor class and a predefined option in that class that we can use to point our devices at our UniFi Controller, no matter what subnet they're on.
 
 For each subnet that contains UniFi devices, we must now add our newly created option to the Scope Options. Begin by right clicking the Scope Options node under one of your Scopes, and choosing `Configure Options`. Click the Advanced tab and choose Ubiquiti under Vendor Class dropdown.
 
@@ -152,7 +152,7 @@ There's only one option, so that's obviously the one we want. Make sure it's che
 
 We now need to do a little math. The IP address of your UniFi Controller must be converted from decimal to hexadecimal. Windows 8.1 and later (at least) makes this extraordinarily easy with the built in calculator.
 
-Open the windows calculator and go to Programmer mode. Ensure DEC mode is selected and type in the first octet of your UniFi Controller's IP, then see the HEX value displayed. Windows displays the value as a single digit when possible, but when entering it in binary, it must be 2 digits. Prepend a `0` to any single-digit hex values you get. For example, `10` converts to `A`, so you would prepend a 0 and get `0A` for your binary octet.
+Open the windows calculator and go to Programmer mode. Ensure DEC mode is selected and type in the first octet of your UniFi Controller's IP, then see the HEX value displayed. Windows displays the value as a single digit when possible, but when entering it in hexadecimal, it must be 2 digits. Prepend a `0` to any single-digit hex values you get. For example, `10` converts to `A`, so you would prepend a 0 and get `0A` for your hexadecimal octet.
 
 <img src="/images/adopting-remote-unifi-devices-with-windows-server-dhcp/calculator.png" />
 
