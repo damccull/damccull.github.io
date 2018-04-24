@@ -38,7 +38,7 @@ Cisco's document on setting up DHCP option 43 for their branded devices was inva
 # Prerequisites
 This article assumes these to be true:
 * You have a working network with two separate subnets
-* A Windows Server handles all DHCP requests for the server
+* A Windows Server handles all DHCP requests for the networks
 * You are not using the router's built in DHCP server
 * There is a UniFi AP (or other UniFi device) on a separate subnet from the UniFi Controller
 
