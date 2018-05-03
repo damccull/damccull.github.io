@@ -42,7 +42,7 @@ This article assumes these to be true:
 * You are not using the router's built in DHCP server
 * There is a UniFi AP (or other UniFi device) on a separate subnet from the UniFi Controller
 
-If you have no met these prerequisites, this will not likely work for you. Setting up these requirements is beyond the scope of this article, but [YouTube](https://youtube.com) has a ton of videos on how to set these devices up in any fashion you wish.
+If you have not met these prerequisites, this will not likely work for you. Setting up these requirements is beyond the scope of this article, but [YouTube](https://youtube.com) has a ton of videos on how to set these devices up in any fashion you wish.
 
 # The Weeds
 ### Understanding Things
