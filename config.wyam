@@ -7,5 +7,6 @@ Settings[Keys.LinkHideExtensions] = false; //Gitlab doesn't support serving file
 Settings[BlogKeys.Title] = "Free-time Programmer";
 Settings[BlogKeys.Description] = "Read this stuff I wrote";
 Settings[BlogKeys.Intro] = "on my blog";
+Settings[BlogKeys.ProcessIncludes] = true;
 
 // Add any pipeline customizations here
