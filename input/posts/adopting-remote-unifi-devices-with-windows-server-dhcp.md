@@ -6,6 +6,7 @@ Tags:
     - Networking
 Lead: Learn to use a vendor-specific DHCP Option 43 to inform UniFi devices about a UniFi Controller on another network.
 ---
+^"../include-files/common-styles.md"
 <style>
 
 table, th, td {
@@ -14,19 +15,6 @@ table, th, td {
     padding: 5px;
     text-align: left;
     font-size: .9em;
-}
-
-.note {
-    margin-bottom:25px;
-    margin-left:auto;
-    margin-right:auto;
-    border:1px solid lightblue;
-    border-radius: 10px;
-    background-color: #e0e0ff;
-    padding: 5px;
-    font-size:.8em;
-    font-family: sans-serif;
-    width:85%;
 }
 </style>
 

@@ -6,20 +6,7 @@ Tags:
     - Lesson
 Lead: Gain a deeper understanding of how the ASP.NET Core 2.0 authentication system works under the covers.
 ---
-<style>
-  .note {
-    margin-bottom:25px;
-    margin-left:auto;
-    margin-right:auto;
-    border:1px solid lightblue;
-    border-radius: 10px;
-    background-color: #e0e0ff;
-    padding: 5px;
-    font-size:.8em;
-    font-family: sans-serif;
-    width:85%;
-  }
-</style>
+^"../include-files/common-styles.md"
 
 <div class="note">
     This post was updated on 18 April 2018 at 22:18. Please see the changelog at the bottom for details.

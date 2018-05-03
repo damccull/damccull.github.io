@@ -4,4 +4,6 @@ Tags:
     - Template Tag
     - Introduction
 ---
+^"../include-files/common-styles.md"
+
 This is my first post!
