@@ -1,9 +1,8 @@
 Title: Using Wyam on GitLab Pages with Continuous Integration
 Published: 5/2/2018 20:10
 Tags:
-    - Ubiquiti
-    - UniFi
-    - Networking
+    - Wyam
+    - Website
 Lead: Learn to automatically generate and upload your Wyam site to GitLab Pages with only a git push.
 ---
 ^"../include-files/common-styles.md"
