@@ -51,7 +51,8 @@ Easy. Next we need to register it as a 'specific runner' with GitLab.
     3. Enter some descriptive name to help you identify the computer this is running on later
     4. Enter some tags that this runner will match when running projects
     5. Enter `false` to the untagged jobs question
-    6. Enter `shell` for the executor
+    6. Enter `true` when asked if you want to lock to the current project
+    7. Enter `shell` for the executor
 3. Open 'config.toml' for editing - should be in the same place as gitlab-runner.exe
     1. Change `executor` to 'shell' if it's not already set that way
     2. Change `shell` to 'powershell'
