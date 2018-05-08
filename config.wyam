@@ -8,5 +8,6 @@ Settings[BlogKeys.Title] = "Free-time Programmer";
 Settings[BlogKeys.Description] = "Read this stuff I wrote";
 Settings[BlogKeys.Intro] = "on my blog";
 Settings[BlogKeys.ProcessIncludes] = true;
+Settings[BlogKeys.IgnoreFolders] = "include-files";
 
 // Add any pipeline customizations here
