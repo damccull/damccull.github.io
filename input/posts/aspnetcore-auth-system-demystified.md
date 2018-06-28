@@ -103,7 +103,7 @@ Here is an example flow for cookies authentication:
 
 ## Code Example
 
-<div class="note">NOTE: You can access and download the source code for this example app at <a href="https://gitlab.com/free-time-programmer-tutorials/demystify-aspnetcore-auth/tree/master" target="\_new">https://gitlab.com/free-time-programmer-tutorials/demystify-aspnetcore-auth/tree/master</a>.</div>
+<div class="note">NOTE: You can access and download the source code for this example app at <a href="https://gitlab.com/free-time-programmer/tutorials/demystify-aspnetcore-auth/tree/master" target="\_new">https://gitlab.com/free-time-programmer/tutorials/demystify-aspnetcore-auth/tree/master</a>.</div>
 
 This example is not intended to be a fully functional web application. It uses a simple POCO to store usernames and passwords, is not a secure or functional way of writing a web application, and does not guarantee proper execution outside of the simple cases of signing in and out. The intention is to illustrate the authentication flow through a code example. In this example I've removed all code unrelated to the topic.
 
