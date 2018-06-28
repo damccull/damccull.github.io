@@ -321,7 +321,7 @@ The following code was added to the bootstrap menu in the \_Layout.cshtml file a
 
 The auth system is interesting and well designed. It's very extensible and will easily work with custom authentication handlers. Understanding how this system works under the hood is the first step in using it beyond the template defaults. All kinds of custom authentication processes are possible by using the components themselves instead of just relying on the templates and convenience methods. Now go write code.
 
-[source-code-link]: https://gitlab.com/free-time-programmer-tutorials/demystify-aspnetcore-auth "Get the source code"
+[source-code-link]: https://gitlab.com/free-time-programmer/tutorials/demystify-aspnetcore-auth "Get the source code"
 
 ## Changelog
 
