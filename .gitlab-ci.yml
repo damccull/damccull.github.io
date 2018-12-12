@@ -1,41 +1,21 @@
+image: microsoft/dotnet
+
 before_script:
     - git submodule update --init --recursive
 
 stages:
-  - build
   - deploy
-
-
-buildBlog:
-  stage: build
-  tags:
-    - windows
-  only:
-    - master
-  script:
-    - mkdir -Force ..\Wyam
-    #Set powershell to use TLS 1.0,1.1,1.2
-    - '[Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"'
-    #Get the version of latest Wyam
-    - Invoke-WebRequest "https://raw.githubusercontent.com/Wyamio/Wyam/master/RELEASE" -outfile ..\Wyam\wyamversion.txt
-    - $WYAMVERSION = get-content ..\wyam\wyamversion.txt
-    - write-host $WYAMVERSION
-    #Get and unzip the latest version of Wyam
-    - Invoke-WebRequest "https://github.com/Wyamio/Wyam/releases/download/$WYAMVERSION/Wyam-$WYAMVERSION.zip" -OutFile ..\Wyam\Wyam.zip
-    - 7z x "-o..\Wyam" "-aoa" ..\Wyam\Wyam.zip -r
-    - ..\Wyam\wyam --output ..\output
-
 
 pages:
     stage: deploy
-    tags:
-      - windows
     only:
       - master
     script:
-      - 'if(test-path -path public) {remove-item -force public}'
-      - mkdir -force public
-      - copy-item -recurse ..\output\* public
+    - export PATH="$PATH:/root/.dotnet/tools"
+    - dotnet tool install -g Wyam.Tool
+    - wyam -v --output output
+    - rm -rf public
+    - mv output public
     artifacts:
       paths:
         - public
