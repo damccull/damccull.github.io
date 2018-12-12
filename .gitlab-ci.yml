@@ -13,7 +13,7 @@ pages:
     script:
     - export PATH="$PATH:/root/.dotnet/tools"
     - dotnet tool install -g Wyam.Tool
-    - wyam -v --output output
+    - wyam --output output
     - rm -rf public
     - mv output public
     artifacts:
