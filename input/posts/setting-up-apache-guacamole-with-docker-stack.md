@@ -30,6 +30,89 @@ docker swarm init
 
 Now you have a fancy swarm of one docker node. You can feel free to add more if you want, but for this purpose it's not needed and may add complexity to your setup. Also, I'm not providing instructions on how to do that or prevent your docker containers from conflicting if you run more than one instance. So you're on your own for that should you choose to add more nodes.
 
+# Create the Docker Stack Configuration File
+Next a configuration is needed file to tell docker what to do when starting up the stack. Copy the text below and paste it into a text editor of some sort and save it as a yaml file. I called mine `guacamole-stack.yaml`.
+
+```
+version: '3'
+networks:
+  guacamole-net:
+
+services:
+  postgres:
+    image: postgres:latest
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+      restart_policy:
+        condition: on-failure
+    volumes:
+      - /home/<USERNAME>/guacamole/guacamole_postgres_database:/var/lib/postgresql/data
+    networks:
+      - guacamole-net
+
+  guacd:
+    image: guacamole/guacd:latest
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+      restart_policy:
+        condition: on-failure
+    networks:
+      - guacamole-net
+
+  guac:
+    image: guacamole/guacamole:latest
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+      restart_policy:
+        condition: on-failure
+    environment:
+      - POSTGRES_HOSTNAME=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DATABASE=guacamole_db
+      - POSTGRES_USER=guacamole
+      - POSTGRES_PASSWORD=<GUACAMOLE DB USER PASSWORD>
+      - GUACD_HOSTNAME=guacd
+    networks:
+      - guacamole-net
+
+  nginx:
+    image: nginx:latest
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+      restart_policy:
+        condition: on-failure
+    volumes:
+      - /home/<USERNAME>/guacamole/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - /home/<USERNAME>/guacamole/nginx/www/letsencrypt:/var/www/letsencrypt
+      - /home/<USERNAME>/guacamole/nginx/letsencrypt-etc:/var/letsencrypt
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - guacamole-net
+```
+
+This file looks like it does a lot, but what it does is this:
+
+1. Sets up a virtual network for the containers to talk on
+2. Sets up four different containers that each do different, but complementary things
+    a. A database
+    b. A guacamole back-end server
+    c. A guacamole front-end server
+    d. A web server acting as a reverse proxy for the guacamole front-end server
+
+That's it. I'll go through the various configuration options and explain a little more. Docker Stack configures 'services', not containers. So each of the configured containers in this file is really a service. The Docker Stack function of Docker will instantiate any number of containers per service that you define or allow. This config is set up to allow one instance per service. For some, like the nginx or front end servers, it could possibly be many more. However, that scenario is not supported in this tutorial.
+
+
+
 
 
 [docker-install-instructions]: https://docs.docker.com/install/ "Docker Install Instructions"
