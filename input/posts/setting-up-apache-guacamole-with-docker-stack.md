@@ -111,6 +111,27 @@ This file looks like it does a lot, but what it does is this:
 
 That's it. I'll go through the various configuration options and explain a little more. Docker Stack configures 'services', not containers. So each of the configured containers in this file is really a service. The Docker Stack function of Docker will instantiate any number of containers per service that you define or allow. This config is set up to allow one instance per service. For some, like the nginx or front end servers, it could possibly be many more. However, that scenario is not supported in this tutorial.
 
+Nested under each service declaration is the configuration for that service. Each one is different because they all serve different purposes, but instead of explaining each configuration item line-by-line, I'll give you the gist of what they do and you should be able to figure out the rest. The top level, directly under `services` defines the name of each service. This also defines the 'dns' name that they can talk to each other by. So the hostnames are 'postgres', 'guacd', 'guac', and 'nginx'.
+
+* `image`: this key defines the docker image to use
+* `deploy`: this key defines how to deploy the service
+    * `replicas`: the number of replicas; 1 in this case because we don't need more
+    * `placement`: defines which node to run it on; if there's more the one node, these will run on the master node
+    * `restart_policy`: how to handle auto-restarts; in this case they'll restart if they fail
+* `environment`: contains environment variables that will be exposed to the software running inside the container
+* `volumes`: contains an array of docker volume maps; folders on the host that should be visible in certain locations in the container
+* `ports`: any ports on the container that need to be exposed from the host server; going to the host's ip on port 80, for instance, will be redirected to the container's port 80
+* `networks`: a list of the virtual docker networks the containers should be able to talk to
+
+# Postgres Configuration
+
+# Web Server Initial Configuration
+
+# HTTPS with Let's Encrypt
+
+# Web Server Final Configuration
+
+# Run it Always, Even After Reboots
 
 
 
