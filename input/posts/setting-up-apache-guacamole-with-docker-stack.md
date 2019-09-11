@@ -125,6 +125,72 @@ Nested under each service declaration is the configuration for that service. Eac
 * `networks:` a list of the virtual docker networks the containers should be able to talk to
 
 # Postgres Configuration
+Next up is the database. Guacamole needs somewhere to store data, after all. I've chosen postgres because it works very well in this docker solution. Guacamole also supports mysql but I had problems getting it to connect because of an SSL inconsistency when using the latest versions of everything.
+
+Configuring Postgres is going to require creating or obtaining a script that will create the schema in the databse, the manually running a postgres container with the same volume mounted we'll eventually use, and finally to execute the script inside that temporary setup container.
+
+Start by generating the script like this:
+
+```
+docker run --rm guacamole/guacamole /opt/guacamole/bin/initdb.sh --postgres > initdb.sql
+```
+
+You should now have a file in the folder where you ran this command called `initdb.sql`. Now we need to run a temporary, one-time-use postgresql container to get the database set up.
+
+```
+docker run --rm --name pg-docker -e POSTGRES_PASSWORD=docker -d -p 5432:5432 -v /home/<USERNAME>/guacamole/guacamole_postgres_database:/var/lib/postgresql/data -v /home/<USERNAME>/initdb.sql:/initdb.sql postgres
+```
+
+This command starts a docker container running a postgres server that:
+
+1. deletes itself after it's done (--rm)
+2. gives it a name called 'pg-docker' (--name)
+3. sets a root password (-e) to allow first-time login
+4. runs in the background (-d)
+5. exposes port 5432 (-p)
+6. mounts a local folder into the container to hold the database (-v)
+7. mounts the initdb.sql file created earlier into /initdb.sql inside the container (-v)
+
+Next, to avoid installing postgres on your computer just to use the client once, run the command directly inside the server container. This command may fail a few times until the postgresql server fully comes online. Just give it a minute, then run this:
+
+```
+docker exec -it pg-docker psql -U postgres
+```
+
+At this point you should be at a command prompt that likely looks different than normal. Should you see something similar to `postgres=#` for your prompt, you've done it right and are connected to the database. Import the database schema with:
+
+```
+docker exec -it pg-docker createdb -U postgres guacamole_db
+docker exec -it pg-docker psql -U postgres -d guacamole_db
+\i /initdb.sql
+```
+
+The first two commands are standard linux shell commands being executed in the container by docker. The first one creates the database and the second one opens an interactive postgresql connection.
+
+The last command in that list populates its schema from commands in the file you generated earlier, and which you should check to ensure accuracy.
+
+Next, we need to create a guacamole user. Just like running as root or an admin is not a good idea on a computer, running as the 'postgres' user is not a good idea in the database.
+
+```
+# If you're still in the shell, skip this command
+docker exec -it pg-docker psql -U postgres -d guacamole_db
+
+CREATE USER guacamole_user WITH PASSWORD 'somepassword';
+GRANT SELECT,INSERT,UPDATE,DELETE ON ALL TABLES IN SCHEMA public TO guacamole_user;
+GRANT SELECT,USAGE ON ALL SEQUENCES IN SCHEMA public TO guacamole_user;
+\q
+```
+
+This first creates a user with the password 'somepassword' (no quotes). Change this password! Then it grants appropriate permissions (just what's needed) to the new user. Finally, it quits the shell and drops you back to your host.
+
+Lastly, for this section, clean up the docker container you used. We're done with it. Don't worry, because we mapped a volume to the postgresql data directory, the databases are safe on your host filesystem.
+
+```
+docker stop pg-docker
+```
+
+With this command the container will stop and be deleted beceause of the `--rm` portion of the command you ran it with. Running `docker ps -a` will not show the pg-docker container anymore.
+
 
 # Web Server Initial Configuration
 
