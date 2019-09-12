@@ -18,7 +18,24 @@ Here are some prerequisites:
 
 1. Download and install your favorite linux distribution on a computer you'll use a server. I am using Ubuntu 18.04 LTS.
 2. Install Docker. Do not use the Snap package as it does not work for this. Install Docker using [their official installation instructions][docker-install-instructions]. Here's a shortcut to the [Ubuntu installation instructions][docker-install-instructions-ubuntu]
+3. Set up this folder structure in your home directory:
 
+```
+guacamole [Directory]
+|-guacamole-stack.yaml [File]
+|-letsencrypt-update-script.sh [File]
+|
+|-guacamole_postgres_database [Directory]
+|
+|-nginx [Directory]
+|-default.conf [File]
+|-www [Directory]
+  |-default [Directory]
+  |-letsencrypt [Directory]
+|-nginx/letsencrypt-var [Directory]
+
+
+```
 
 # Set Up Docker
 We're going to be using a neat technology Docker calls Docker Stack. I recommend you pause here and take a few minutes to [run through this very quick tutorial][docker-get-started] on their website to understand the various levels of Docker and how they relate with each other.
@@ -93,7 +110,7 @@ services:
     volumes:
       - /home/<USERNAME>/guacamole/nginx/default.conf:/etc/nginx/conf.d/default.conf
       - /home/<USERNAME>/guacamole/nginx/www/letsencrypt:/var/www/letsencrypt
-      - /home/<USERNAME>/guacamole/nginx/letsencrypt-etc:/var/letsencrypt
+      - /home/<USERNAME>/guacamole/nginx/letsencrypt-var:/var/letsencrypt
     ports:
       - 80:80
       - 443:443
