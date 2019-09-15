@@ -210,6 +210,15 @@ With this command the container will stop and be deleted beceause of the `--rm` 
 
 
 # Web Server Initial Configuration
+The next step is to configure nginx as a reverse proxy. This allows you to use https and keep your communications secure, and provides a well-known, highly tested and secured web server between the real world and your poor guacamole server.
+
+<div class="note">Note: The security of nginx depends on how you configure it. I believe my configuration to be fairly secure but I do not guarantee it. Do some research if you want to harden it properly.</div>
+
+First is to create the configuration file. Well, that's all that's needed, actually. No installation is needed because the whole webserver will be hosted inside a docker container.
+
+Create or open `/home/<USERNAME>/guacamole/nginx/default.conf`. This is going to be linked into the nginx container and will provide the configuration for the server.
+
+
 
 # HTTPS with Let's Encrypt
 
