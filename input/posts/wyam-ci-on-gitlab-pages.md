@@ -1,5 +1,5 @@
 Title: Using Wyam on GitLab Pages with Continuous Integration
-Published: 5/2/2018 20:10
+Published: 5/3/2018 02:10 GMT
 Tags:
     - Wyam
     - Website
