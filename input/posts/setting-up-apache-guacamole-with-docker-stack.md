@@ -1,5 +1,5 @@
 Title: Setting Up Apache Guacamole with Docker Stack
-Published: 12/9/2019 20:27
+Published: 12/8/2019 20:27
 Tags:
     - Guacamole
     - RDP
