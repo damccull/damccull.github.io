@@ -248,7 +248,7 @@ docker run --rm guacamole/guacamole /opt/guacamole/bin/initdb.sh --postgres > ~/
 You should now have a file in the folder where you ran this command called `initdb.sql`. Now we need to run a temporary, one-time-use postgresql container to get the database set up.
 
 ```
-docker run --rm --name pg-docker -e POSTGRES_PASSWORD=docker -d -p 5432:5432 -v ~/guacamole/guacamole_postgres_database:/var/lib/postgresql/data -v ~/initdb.sql:/initdb.sql postgres
+docker run --rm --name pg-docker -e POSTGRES_PASSWORD=docker -d -p 5432:5432 -v ~/guacamole/guacamole_postgres_database:/var/lib/postgresql/data -v ~/guacamole/initdb.sql:/initdb.sql postgres
 ```
 
 This command starts a docker container running a postgres server that:
