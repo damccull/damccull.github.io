@@ -1,5 +1,10 @@
-Title: Comment Policy
----
++++
+title = "Comment Policy"
+path = "comment-policy"
+[extra]
+date = 2021-04-30
++++
+
 Thanks to [disqus' sample policy](https://help.disqus.com/customer/portal/articles/1450383)
 
 

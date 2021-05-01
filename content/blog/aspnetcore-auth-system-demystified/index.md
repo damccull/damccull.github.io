@@ -1,12 +1,15 @@
-Title: ASP.NET Core 2.0 Authentication and Authorization System Demystified
-Published: 8/18/2017 08:32 GMT
-Updated: 4/19/2018 04:18 GMT
-Tags:
-    - ASP.Net Core
-    - Lesson
-Lead: Gain a deeper understanding of how the ASP.NET Core 2.0 authentication system works under the covers.
----
-^"../include-files/common-styles.md"
++++
+title = "ASP.NET Core 2.0 Authentication and Authorization System Demystified"
+date = 2017-08-18T08:32:00Z
+update = 2018-04-19T04:18:00Z
+
+description = "Gain a deeper understanding of how the ASP.NET Core 2.0 authentication system works under the covers."
+aliases = ["/posts/aspnetcore-auth-system-demystified.html"]
+
+[taxonomies]
+tags = ["ASP.Net Core"]
+categories = ["Lessons"]
++++
 
 <div class="note">
     This post was updated on 18 April 2018 at 22:18. Please see the changelog at the bottom for details.
@@ -90,7 +93,7 @@ All of these components must be used together in the auth system in order to suc
 
 Here is an example flow for cookies authentication:
 
-<img src="/images/aspnetcore-auth-system-demystified/aspnetcore-auth-system-demystified_auth-flow.svg" />
+<img src="aspnetcore-auth-system-demystified_auth-flow.svg" style="background-color:white;" />
 
 1. The request arrives at the server.
 2. The authentication middleware calls the default handler's Authenticate method and populates the HttpContext.User object with any available information.
