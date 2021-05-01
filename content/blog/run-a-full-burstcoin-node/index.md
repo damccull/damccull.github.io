@@ -5,7 +5,7 @@ date = 2021-05-01T14:06:00Z
 description = "Learn how to support the Burstcoin network by setting up and running a full Burstcoin node on your computer."
 
 [taxonomies]
-tags = ["Burstcoin", "Proof of Capacity", "Proof of Stake"]
+tags = ["Burstcoin", "Proof of Capacity"]
 categories = ["CryptoCurrency"]
 +++
 
