@@ -5,7 +5,7 @@ date = 2021-05-01T14:06:00Z
 description = "Learn how to support the Burstcoin network by setting up and running a full Burstcoin node on your computer."
 
 [taxonomies]
-tags = ["Burstcoin", "Proof of Capacity"]
+tags = ["Burstcoin", "Proof of Capacity", "Proof of Stake"]
 categories = ["CryptoCurrency"]
 +++
 
@@ -18,9 +18,9 @@ Estimates show Bitcoin using more electricity than some small countries if you t
 ## Proof of Capacity Cryptocurrency
 Proof of Capacity cryptocurrencies offer a much reduced electrical footprint by trading the Proof of Work algorithms for an algorithm that pre-computes most of the necessary data only once and stores it on hard drives. Then, when it's time to create a new entry in the distributed database, the miners search specific places on the hard drives, do a little math on the values found there, and produce a 'deadline', which is simply a number in seconds until the next block in the blockchain can be created.
 
-A recent entry into the Proof of Capacity space is a coin called Chia, supposedly created by the creator of bit torrent. It has done quite a bit to popularize the incredibly small environmental impact of Proof of Capacity. However, it's the new kid on the block.
+A recent entry into the Proof of Capacity space is a coin called Chia, supposedly created by the creator of bit torrent. It has done quite a bit to popularize the incredibly small environmental impact of Proof of Capacity. However, it's the new kid on the block. They also aren't pure Proof of Capacity as it also takes into account time.
 
-The original Proof of Capacity cryptocurrency, Burstcoin, has been running since 10pm GMT on the 10th of August, 2014. A new block is forged approximately every 4 minutes and the blockchain is at block 878078 as of the writing of this article. Burstcoin has been running stable for many years. It's an open source, community driven project with several different wallet softwares and a Smart Contract system that lets programs run in the blockchain itself.
+The original Proof of Capacity cryptocurrency, Burstcoin, has been running since 10pm GMT on the 10th of August, 2014. A new block is forged approximately every 4 minutes and the blockchain is at block 878078 as of the writing of this article. Burstcoin has been running stable for many years. It's an open source, community driven project with several different wallet softwares and a Smart Contract system that lets programs run in the blockchain itself. As of block 878000, Burstcoin is not only Proof of Capacity either, but now encourages staking your coins to provide a boost to mining.
 
 Let's set up a full node for Burstcoin.
 
