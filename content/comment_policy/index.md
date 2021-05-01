@@ -1,8 +1,9 @@
 +++
 title = "comment policy"
 path = "comment-policy"
-date = 2021-04-30
 [extra]
+#Keep date here in extra section to avoid indexing on homepage
+date = 2021-04-30
 +++
 
 Thanks to [disqus' sample policy](https://help.disqus.com/customer/portal/articles/1450383)

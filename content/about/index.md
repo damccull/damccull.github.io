@@ -1,8 +1,9 @@
 +++
 title = "about me"
 path = "about"
-date = 2021-04-30
 [extra]
+#Keep date here in extra section to avoid indexing on homepage
+date = 2021-04-30
 +++
 
 My name is David McCullough. I program as a hobby or for small side jobs and love the challenge. I've been programming since 1997 and started with QBasic. Since then I've used C, C++, Java, and finally found my love in C#. I had experience with several other languages as well, though I was never as fluent in them.
