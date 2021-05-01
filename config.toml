@@ -1,6 +1,9 @@
 # The URL the site will be built for
 base_url = "https://digitalmccullough.com"
 
+title = "free-time programmer"
+description = "read this stuff I wrote on my blog..."
+
 # The site theme to use.
 theme = "zerm"
 
@@ -27,7 +30,7 @@ highlight_code = true
 author = "David McCullough"
 
 # Show author's name in blog post meta data.
-show_author = true
+show_author = false
 
 # Show categories a blog post is marked with in its meta data.
 show_categories = true
@@ -85,8 +88,4 @@ main_menu = [
 menu_more = "more things"
 
 # Displayed after teaser text for a blog post.
-read_more = "read more"
-
-# not currently used from previous theme, but leaving here for now in case I
-# feel like adding it.
-read_other_posts = "read other posts"
+read_more = "read"
