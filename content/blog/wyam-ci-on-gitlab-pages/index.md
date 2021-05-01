@@ -1,11 +1,18 @@
-Title: Using Wyam on GitLab Pages with Continuous Integration
-Published: 5/3/2018 02:10 GMT
-Tags:
-    - Wyam
-    - Website
-Lead: Learn to automatically generate and upload your Wyam site to GitLab Pages with only a git push.
----
-^"../include-files/common-styles.md"
++++
+title = "Using Wyam on GitLab Pages with Continuous Integration"
+date = 2018-05-03T02:10:00Z
+update = 2021-04-30T20:52:00Z
+description = "Learn to automatically generate and upload your Wyam site to GitLab Pages with only a git push."
+aliases = ["/posts/wyam-ci-on-gitlab-pages.html"]
+
+[taxonomies]
+tags = ["Wyam", "Website"]
+categories = ["Lessons"]
++++
+
+<div class="note">
+    NOTE: Wyam has been supersceded by a project called Statiq. This post is not necessarily accurate any longer and the instructions may or may not work. They will probably not work at all for Statiq.
+</div>
 
 # Introduction
 Continuous Integration with Wyam is a quest many have considered and promptly rejected because...it's hard. It's not natively supported on many platforms because it doesn't run on linux. At least not at the time of this article's publication. But take heart, brave adventurer, for all is not lost! Two possibilites exist to triumph in your quest: either wait for .NET Core support or follow this very tutorial.

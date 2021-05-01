@@ -1,13 +1,19 @@
-Title: Setting Up Apache Guacamole with Docker Stack
-Published: 12/9/2019 11:27 GMT
-Tags:
-    - Guacamole
-    - RDP
-    - Remote Desktop
-    - Remote Access
-Lead: Get remote access to your computers via an HTML5 web page
----
-^"../include-files/common-styles.md"
++++
+title = "Setting Up Apache Guacamole with Docker Stack"
+date = 2019-12-09T11:27:00Z
+update = 2021-04-30T20:57:00Z
+
+description = "Get remote access to your computers via an HTML5 web page."
+aliases = ["/posts/setting-up-apache-guacamole-with-docker-stack.html"]
+
+[taxonomies]
+tags = ["Guacamole", "RDP", "Remote Desktop", "Remote Access"]
+categories = ["Lessons"]
++++
+
+<div class="note">
+NOTE: This post has some bugs in it that I haven't had the time to identify and fix. These instructions do not work 100% as intended, and you may not have a working installation just by following this post. If you manage to identify the problems, please let me know in the comments.
+</div>
 
 There have been many times I've needed to access my home computers but did not have the ability to use SSH or RDP, usually because those technologies end up blocked wherever I am. I already have the capability to VPN into my network, but there are times and locations where that technology gets blocked too. The one technology that never gets blocked (unless you live in a country that censors the internet) is standard web pages running on ports 80 or 443.
 
