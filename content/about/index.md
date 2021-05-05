@@ -1,6 +1,8 @@
 +++
 title = "about me"
 path = "about"
+aliases = ["/about.html"]
+
 [extra]
 #Keep date here in extra section to avoid indexing on homepage
 date = 2021-04-30
