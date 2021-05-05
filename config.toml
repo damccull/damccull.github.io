@@ -89,3 +89,7 @@ menu_more = "more things"
 
 # Displayed after teaser text for a blog post.
 read_more = "read"
+
+
+# Options for disqus
+disqus = { enabled=true, short_name="digitalmccullough" }
