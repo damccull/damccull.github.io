@@ -68,6 +68,11 @@ You should also replace the path to match your own desired plot files location.
 
 Once you execute the command, engraver will start creating your plot files. This is going to take a long time if you have a lot of space to plot. It will block your terminal, so if you aren't using a GUI, consider running it in 'screen', 'tmux', or 'byobu'. These are all command line multiplexers. Google them to learn more about them.
 
+Wait until the plotting is complete, then move on to mining.
+
+<div class="note">Note: If your engraver dies or you need to quit it early, worry not! Engraver is smart enough to pick up where it left off. To get this behavior, however, you DO need to type the exact same command you did the first time. If you make a mistake in the numbers or ID, it'll start a brand new plot file.</div>
+
+# Get Those Scavenging Gloves On
 
 
 
