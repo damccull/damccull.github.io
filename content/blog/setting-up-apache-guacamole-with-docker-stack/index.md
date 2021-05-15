@@ -2,7 +2,7 @@
 title = "Setting Up Apache Guacamole with Docker Stack"
 date = 2019-12-09T11:27:00Z
 update = 2021-04-30T20:57:00Z
-
+draft = true
 description = "Get remote access to your computers via an HTML5 web page."
 aliases = ["/posts/setting-up-apache-guacamole-with-docker-stack.html"]
 
