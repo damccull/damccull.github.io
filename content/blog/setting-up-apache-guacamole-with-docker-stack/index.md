@@ -22,31 +22,33 @@ Apache has a technology that acts as an RDP, ssh, and VNC gateway, presenting th
 # Stuff you have to do first
 Here are some prerequisites:
 
-1. Download and install your favorite linux distribution on a computer you'll use a server. I am using Ubuntu 18.04 LTS.
+1. Download and install your favorite linux distribution on a computer you'll use a server. I am using Ubuntu 20.04 LTS.
 2. Install Docker. Do not use the Snap package as it does not work for this. Install Docker using [their official installation instructions][docker-install-instructions]. Here's a shortcut to the [Ubuntu installation instructions][docker-install-instructions-ubuntu]
 3. Install OpenSSL however your distribution does it.
-4. Set up this folder structure in your home directory:
-
+4. Set up this folder structure in your home folder (names ending with a slash are folders):
 ```
-guacamole [Directory]
-|-guacamole_postgres_database [Directory]
-|-guacamole-stack.yml [File]
-|-run_guacamole.sh [File]
-|-acme.json [File] (used for letsencrypt)
-|-initdb.sql [File]
+guacamole/
+|-guacamole_postgres_database/
+|-guacamole-stack.yml
+|-run_guacamole.sh
+|-acme.json
+|-initdb.sql
 ```
 
-You don't have to precreate all of these files and folders, but it will be more convenient to do it now. To create a folder you can type `mkdir <foldername>` and to create an empty file you can type `touch <filename>`. For instance:
-
+You don't have to precreate all of these files and folders, but it will be more convenient to do it now. To create a folder you can type `mkdir <foldername>` and to create an empty file you can type `touch <filename>`. For instance, you can run the following commands to set up the folder structure shown above:
 ```
-mkdir guacamole
-touch guacamole/guacamole-stack.yml
+mkdir ~/guacamole
+mkdir ~/guacamole/guacamole_postgres_database
+touch ~/guacamole/guacamole-stack.yml
+touch ~/guacamole/run_guacamole.sh
+touch ~/guacamole/acme.json
+touch ~/guacamole/initdb.sql
 ```
 
 All files and folders in this tutorial will be referenced by their relation to your home directory. Your home directory in linux is represented as a shortcut with the `~` character. Thus, an example path would be `~/guacamole/guacamole-stack.yml`. This should cut down on the confusion of which file to work with.
 
 # Set Up Docker
-We're going to be using a neat technology Docker calls Docker Stack. I recommend you pause here and take a few minutes to [run through this very quick tutorial][docker-get-started] on their website to understand the various levels of Docker and how they relate with each other.
+We're going to be using a neat technology Docker calls Docker Stack. I recommend you pause here and take a few minutes to [run through this very quick tutorial][docker-get-started] on their website to understand the basics of Docker.
 
 Now that you're back, let's get started. First, enable docker swarm mode. You're going to have only a single node in your swarm, but this enables the ability for docker stack to work, as well.
 
@@ -54,10 +56,13 @@ Now that you're back, let's get started. First, enable docker swarm mode. You're
 docker swarm init
 ```
 
-Now you have a fancy swarm of one docker node. You can feel free to add more if you want, but for this purpose it's not needed and may add complexity to your setup. Also, I'm not providing instructions on how to do that or prevent your docker containers from conflicting if you run more than one instance. So you're on your own for that should you choose to add more nodes.
+Now you have a fancy swarm of one docker node. You can feel free to add more if you want, but for this purpose it's not needed and may add complexity to your setup.
+
+<div class="note">Note: Without the correct configuration, running more than one node can cause your containers to auto-balance over to other nodes and be unable to communicate properly with each other, or to auto-scale and cause file or database corruption. I'm not providing instructions for all that, so stick with one node unless you know what you're doing.</div>
 
 # Create the Docker Stack Configuration File
-Next a configuration is needed file to tell docker what to do when starting up the stack. Copy the text below and paste it into a text editor of some sort and save it as a yml file. I called mine `guacamole-stack.yml`.
+Next a configuration is needed file to tell docker what to do when starting up the stack. Copy the text below and paste it into a text editor of some sort and save it as `~/guacamole/guacamole-stack.yml`. From the command line you can type either of these:
+
 
 ```Dockerfile
 version: '3.7'
