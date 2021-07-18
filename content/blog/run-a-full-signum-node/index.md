@@ -33,7 +33,7 @@ Burstcoin was recently rebranded in an effort to create a stronger, more recogni
 
 With all that background out of the way, let's set up a full node for Signum.
 
-You can use the same download for both Windows and Linux because Signum's current software is written in Java. [Download the latest zip release here][Signum-download] and unzip it to anywhere on your PC.
+You can use the same download for both Windows and Linux because Signum's current software is written in Java. [Download the latest zip release here][signum-download] and unzip it to anywhere on your PC.
 
 # Windows is Easy Peasy
 
@@ -126,7 +126,7 @@ To start earning the NDS-A, you need to ensure a few things are set up properly.
 # End of Line
 In this article, I explained how to fully set up a Signum full node and even earn yourself some NDS-A Signums. There's a lot I didn't cover, so if you have additional questions, please join the community on [Discord][discord-join-link].
 
-[Signum-download]: https://github.com/signum-network/signum-node/releases/latest "Signum Downloads"
+[signum-download]: https://github.com/signum-network/signum-node/releases/latest "Signum Downloads"
 [jportable]: https://portableapps.com/apps/utilities/java_portable "jPortable"
 [docker-install-instructions]: https://docs.docker.com/install/ "Docker Install Instructions"
 [docker-install-instructions-ubuntu]: https://docs.docker.com/install/linux/docker-ce/ubuntu/ "Docker Install Instructions for Ubuntu"
