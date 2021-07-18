@@ -13,6 +13,8 @@ categories = ["CryptoCurrency"]
 
 <div class="note">Update: This article originally talked about Signum's old name, Burstcoin. It has been updated to reference Signum in most places, a portion of the background was rewritten to be more relevant, and links were updated to point at new Signum locations.</div>
 
+<div class="note">Important note: a few places here mention `burst.exe` and `burst.jar`. At the time of this update, these are accurate, but the files will eventually be renamed to `signum.exe` and `signum.jar`. If you have those file names, use them in places of the burst variants.</div>
+
 # A Bit of Background
 ## Traditional Cryptocurrency
 Cryptocurrencies are all the rage these days. A single Bitcoin is worth the price of a small house in some places, or more than a single car most everywhere. Bitcoin is a major success story for cryptocurrencies, but it and other coins like it have a pretty major impact on the consumption of electricity.
