@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <title>ASP.NET Core 2.0 Authentication and Authorization System Demystified - free-time programmer</title>
+    
+    
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <meta name="description" content="read this stuff I wrote on my blog..."/>
+
+    <meta property="og:title" content="free-time programmer -&nbsp;ASP.NET Core 2.0 Authentication and Authorization System Demystified" />
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="https:&#x2F;&#x2F;digitalmccullough.com&#x2F;blog&#x2F;aspnetcore-auth-system-demystified&#x2F;"/>
+    <meta property="og:description" content="Gain a deeper understanding of how the ASP.NET Core 2.0 authentication system works under the covers."/>
+    <link rel="preload" href="/assets/fonts/FiraCode-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/assets/fonts/FiraCode-Bold.woff2" as="font" type="font/woff2" crossorigin>
+
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;digitalmccullough.com&#x2F;style.css">
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;digitalmccullough.com&#x2F;color&#x2F;blue.css">
+</head>
+    <body>
+        <div class="container center">
+<header class="header">
+    <div class="header__inner">
+        <div class="header__logo">
+            <a href="&#x2F;">
+    <div class="logo">
+        free-time programmer
+    </div>
+</a>
+        </div>
+        <div class="menu-trigger">menu</div>
+    </div>
+    <div class="subtitle">read this stuff I wrote <sub>on by blog...</sub></div>
+
+    
+    <nav class="menu">
+        <ul class="menu__inner menu__inner--desktop">
+            
+            
+                    <li>
+                        <a href="
+    
+        https:&#x2F;&#x2F;digitalmccullough.com&#x2F;
+    
+">home</a>
+                    </li>
+                
+                    <li>
+                        <a href="
+    
+        https:&#x2F;&#x2F;digitalmccullough.com&#x2F;about&#x2F;
+    
+">about</a>
+                    </li>
+                
+                    <li>
+                        <a href="
+    
+        https:&#x2F;&#x2F;digitalmccullough.com&#x2F;comment-policy&#x2F;
+    
+">comment policy</a>
+                    </li>
+                <ul class="menu__sub-inner">
+                        <li class="menu__sub-inner-more-trigger">more things ▾</li>
+                        <ul class="menu__sub-inner-more hidden">
+                            
+        <li>
+            <a href="
+    
+        https:&#x2F;&#x2F;digitalmccullough.com&#x2F;tags
+    
+">tags</a>
+        </li>
+        <li>
+            <a href="
+    
+        https:&#x2F;&#x2F;digitalmccullough.com&#x2F;categories
+    
+">categories</a>
+        </li>
+                        </ul>
+                    </ul>
+            </ul>
+
+        <ul class="menu__inner menu__inner--mobile">
+            
+        <li>
+            <a href="
+    
+        https:&#x2F;&#x2F;digitalmccullough.com&#x2F;
+    
+">home</a>
+        </li>
+        <li>
+            <a href="
+    
+        https:&#x2F;&#x2F;digitalmccullough.com&#x2F;about&#x2F;
+    
+">about</a>
+        </li>
+        <li>
+            <a href="
+    
+        https:&#x2F;&#x2F;digitalmccullough.com&#x2F;comment-policy&#x2F;
+    
+">comment policy</a>
+        </li>
+        <li>
+            <a href="
+    
+        https:&#x2F;&#x2F;digitalmccullough.com&#x2F;tags
+    
+">tags</a>
+        </li>
+        <li>
+            <a href="
+    
+        https:&#x2F;&#x2F;digitalmccullough.com&#x2F;categories
+    
+">categories</a>
+        </li>
+        </ul>
+    </nav>
+
+    </header>
+<div class="content"><article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https:&#x2F;&#x2F;digitalmccullough.com&#x2F;blog&#x2F;aspnetcore-auth-system-demystified&#x2F;">ASP.NET Core 2.0 Authentication and Authorization System Demystified</a>
+            </h1>
+            
+    <div class="post-meta">
+        <span class="post-date">2017.08.18
+                </span>
+
+        <span class="post-author"></span>
+
+        
+
+    
+    :: {<a href="https:&#x2F;&#x2F;digitalmccullough.com&#x2F;categories&#x2F;lessons&#x2F;">Lessons</a>} 
+
+            
+    ::
+    #<a href="https:&#x2F;&#x2F;digitalmccullough.com&#x2F;tags&#x2F;asp-net-core&#x2F;">ASP.Net Core</a>
+        
+    
+            
+        
+    </div>
+
+        </header>
+
+        
+
+        <div class="note">
+    This post was updated on 18 April 2018 at 22:18. Please see the changelog at the bottom for details.
+</div>
+<p>There is a component that exists in ASP.NET Core that conjures up an enchanted shield that protects portions (or all) of your website from unauthorized access. Like many people, I have used this component from the beginning of my journey, but have never understood it. It was conjured up by a wizard and provided a magical barrier between my website and the world. That’s not how it really works, of course, but without the right knowledge, it might as well.</p>
+<p>While trying to figure out how to fix an error in my code, I happened to ask the right question at the right time on the right Slack channel.  David Fowler, who happens to be one of the core maintainers of aspnetcore, decided to give everyone present a lesson on how the authentication system (auth system, from now on) works in ASP.NET Core 2.0. This article is based on the information in his impromptu lesson.</p>
+<p>I later found an article by Andrew Lock going into details about the claims portion and, after reading his article and doing slightly more research, added the section on Identity.</p>
+<p>Understanding the system first requires understanding its components and behaviors. They can be broken down into identity, verbs, authentication handlers, and middleware. I will cover each of these individually and then demonstrate how they work together in an example auth request. Since ASP.NET Core's most common authentication handler is the Cookies auth handler, these examples will use cookie authentication.</p>
+<h2 id="identity">Identity<a class="zola-anchor" href="#identity" aria-label="Anchor link for: identity">§</a>
+</h2>
+<p>Key to understanding how authentication works is to first understand what an identity is in ASP.NET Core 2.0. There are three classes which represent the identity of a user: Claim, ClaimsIdentity, and ClaimsPrincipal</p>
+<h3 id="claims">Claims<a class="zola-anchor" href="#claims" aria-label="Anchor link for: claims">§</a>
+</h3>
+<p>A <em>Claim</em> represents a single fact about the user. It could be the user's first name, last name, age, employer, birth date, or anything else that is true about the user. A single claim will contain only a single piece of information. A claim representing something about a user John Smith could be his first name: John. A second claim would be his last name: Smith.</p>
+<p>Claims are represented by the <code>Claim</code> class in ASP.Net Core. It's most common constructor accepts two strings: type and value. The 'type' parameter is the name of the claim, while the value is the information the claim is representing about the user.</p>
+<p>This code will create two new claims. One of type 'FullName' with a value of 'Dark Helmet', and a second of type <code>ClaimTypes.Email</code> and a value of 'dark.helmet@spaceballs.com'. There is a ClaimsType class that contains many string constants that represent industry standard claim types. These are all in URI format, but claim types can be any string.</p>
+<pre style="background-color:#2b303b;">
+<code class="language-cs" data-lang="cs"><span style="color:#65737e;">//This claim uses a standard string
+</span><span style="color:#c0c5ce;">new Claim(&quot;</span><span style="color:#a3be8c;">FullName</span><span style="color:#c0c5ce;">&quot;,&quot;</span><span style="color:#a3be8c;">Dark Helmet</span><span style="color:#c0c5ce;">&quot;);
+
+</span><span style="color:#65737e;">//This claim type expands to &#39;http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress&#39;
+</span><span style="color:#c0c5ce;">new Claim(</span><span style="color:#bf616a;">ClaimTypes</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">Email</span><span style="color:#c0c5ce;">, &quot;</span><span style="color:#a3be8c;">dark.helmet@spaceballs.com</span><span style="color:#c0c5ce;">&quot;);
+</span></code></pre><h3 id="claimsidentity">ClaimsIdentity<a class="zola-anchor" href="#claimsidentity" aria-label="Anchor link for: claimsidentity">§</a>
+</h3>
+<p>An <em>Identity</em> represents a form of identification or, in other words, a single way of proving who you are. In real life this could be a driver's license. In ASP.Net Core, it is a <code>ClaimsIdentity</code>. This class represents a single form of digital identification.</p>
+<p>A single instance of a <code>ClaimsIdentity</code> can be authenticated or not authenticated. According to Andrew Lock's <a href="https://andrewlock.net/introduction-to-authentication-with-asp-net-core/" title="Introduction to Authentication with ASP.NET Core - Andrew Lock"><em>Introduction to Authentication with ASP.NET Core</em></a>, simply setting the AuthenticationType will automatically ensure the IsAuthenticated property is true. This is because if you have authenticated the identity in any way, then it must, by definition, be authenticated.</p>
+<p>An unknown person walking up to you and making various claims about theirself and their life would be equivilent to an unauthenticated <code>ClaimsIdentity</code>. Lock writes that this may be useful to allow guest shopping carts (prior to a sign in, perhaps) and similar use cases.</p>
+<p>A driver's license contains many claims about its subject: first and last names, birthdate, hair and eye colors, height, and others. Similarly, a <code>ClaimsIdentity</code> can contain numerous claims about a user.</p>
+<h3 id="claimsprincipal">ClaimsPrincipal<a class="zola-anchor" href="#claimsprincipal" aria-label="Anchor link for: claimsprincipal">§</a>
+</h3>
+<p>A <em>Principal</em> represents the actual user. It can contain one or more instances of <code>ClaimsIdentity</code>, just like in life a person may have a driver's license, concealed-carry permit, social security card, and a passport. Each of the identities is used for a different purpose and may contain a unique set of claims, but they all identify the same user in some form or another.</p>
+<p>To sum up, a <code>ClaimsPrincipal</code> represents a user and contains one or more instances of <code>ClaimsIdentity</code>, which in turn represent a single form of identification and contain one or more instances of <code>Claim</code>, which represents a single piece of information about a user. The <code>ClaimsPrincipal</code> is what the <code>HttpContext.SignInAsync</code> method accepts and passes to the specified <code>AuthenticationHandler</code>.</p>
+<h2 id="verbs">Verbs<a class="zola-anchor" href="#verbs" aria-label="Anchor link for: verbs">§</a>
+</h2>
+<p>There are 5 verbs (these can also be thought of as commands or behaviors) that are invoked by the auth system, and are not necessarily called in order. These are all independent actions that do not communicate among themselves, however, when used together allow users to sign in and access pages otherwise denied. Here is a very brief description of what each verb is responsible for. We’ll go into more depth further in the article.</p>
+<div class="note">Note: These are behaviors, not methods (although there are methods of the same names implementing these behaviors).</div>
+<ul>
+<li><em>Authenticate</em>
+<ul>
+<li>Gets the user’s information if any exists (e.g. decoding the user’s cookie, if one exists)</li>
+</ul>
+</li>
+<li><em>Challenge</em>
+<ul>
+<li>Requests authentication by the user (e.g. showing a login page)</li>
+</ul>
+</li>
+<li><em>SignIn</em>
+<ul>
+<li>Persists the user’s information somewhere (e.g. writes a cookies)</li>
+</ul>
+</li>
+<li><em>SignOut</em>
+<ul>
+<li>Removes the user’s persisted information (e.g. deletes the cookies)</li>
+</ul>
+</li>
+<li><em>Forbid</em>
+<ul>
+<li>Denies access to a resource for unauthenticated users or authenticated but unauthorized users (e.g. displaying a “not authorized” page)</li>
+</ul>
+</li>
+</ul>
+<h2 id="authentication-handlers">Authentication Handlers<a class="zola-anchor" href="#authentication-handlers" aria-label="Anchor link for: authentication-handlers">§</a>
+</h2>
+<p>Authentication handlers are components that actually implement the behavior of the 5 verbs above. The default auth handler provided by ASP.NET Core is the Cookies authentication handler which implements all 5 of the verbs. It is important to note, however, that an auth handler is not required to implement all of the verbs. Oauth handlers, for instance, do not implement the SignIn verb, but rather pass off that responsibility to another auth handler, such as the Cookies auth handler.</p>
+<p>Authentication handlers must be registered with the auth system in order to be used and are associated with schemes. A scheme is just a string that identifies a unique auth handler in a dictionary of auth handlers. The default scheme for the Cookies auth handler is “Cookies”, but it can be changed to anything. Multiple auth handlers can be used side by side, and sometimes (like in the earlier example of the Oauth handlers) use functionality provided by other auth handlers.</p>
+<h2 id="authentication-middleware">Authentication Middleware<a class="zola-anchor" href="#authentication-middleware" aria-label="Anchor link for: authentication-middleware">§</a>
+</h2>
+<p>A middleware is a module that can be inserted into the startup sequence and is run on every request. The one this article is concerned with is the authentication middleware. This code checks if a user is authenticated (or not) on every request. Recall that the Authenticate verb gets the user info, but only if it exists. When the request is run, the authentication middleware asks the default scheme auth handler to run its authentication code. The auth handler returns the information to the authentication middleware which then populates the HttpContext.User object with the returned information.</p>
+<h2 id="authentication-and-authorization-flow">Authentication and Authorization Flow<a class="zola-anchor" href="#authentication-and-authorization-flow" aria-label="Anchor link for: authentication-and-authorization-flow">§</a>
+</h2>
+<p>All of these components must be used together in the auth system in order to successfully authenticate and authorize a user to access a resource. The process begins with the unauthenticated user sending a request for a resource that requires authorization to access.</p>
+<p>Here is an example flow for cookies authentication:</p>
+<img src="aspnetcore-auth-system-demystified_auth-flow.svg" style="background-color:white;" />
+<ol>
+<li>The request arrives at the server.</li>
+<li>The authentication middleware calls the default handler's Authenticate method and populates the HttpContext.User object with any available information.</li>
+<li>The request arrives at the controller action.</li>
+<li>If the action is not decorated with the <code>[Authorize]</code> attribute, display the page and stop here.</li>
+<li>If the action <strong>is</strong> decorated with <code>[Authorize]</code>, the auth filter checks if the user was authenticated.</li>
+<li>If the user was not, the auth filter calls Challenge, redirecting to the appropriate signin authority.</li>
+<li>Once the signin authority directs the user back to the app, the auth filter checks if the user is authorized to view the page.</li>
+<li>If the user is authorized, it displays the page, otherwise it calls Forbid, which displays a 'not authorized' page.</li>
+</ol>
+<h2 id="code-example">Code Example<a class="zola-anchor" href="#code-example" aria-label="Anchor link for: code-example">§</a>
+</h2>
+<div class="note">NOTE: You can access and download the source code for this example app at <a href="https://gitlab.com/free-time-programmer/tutorials/demystify-aspnetcore-auth/tree/master" target="\_new">https://gitlab.com/free-time-programmer/tutorials/demystify-aspnetcore-auth/tree/master</a>.</div>
+<p>This example is not intended to be a fully functional web application. It uses a simple POCO to store usernames and passwords, is not a secure or functional way of writing a web application, and does not guarantee proper execution outside of the simple cases of signing in and out. The intention is to illustrate the authentication flow through a code example. In this example I've removed all code unrelated to the topic.</p>
+<h4 id="class-startup">class Startup<a class="zola-anchor" href="#class-startup" aria-label="Anchor link for: class-startup">§</a>
+</h4>
+<p>When the app first starts it triggers the ConfigureServices() and Configure() methods in the Startup class. In aspnetcore 2.0 authentication handlers are registered and configured entirely in the ConfigureServices method, and there is a single call to turn them all on in the Configure method.</p>
+<pre style="background-color:#2b303b;">
+<code class="language-cs" data-lang="cs"><span style="color:#b48ead;">public void </span><span style="color:#8fa1b3;">ConfigureServices</span><span style="color:#c0c5ce;">(IServiceCollection </span><span style="color:#bf616a;">services</span><span style="color:#c0c5ce;">) {
+    </span><span style="color:#65737e;">//Adds cookie middleware to the services collection and configures it
+    </span><span style="color:#bf616a;">services</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">AddAuthentication</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">CookieAuthenticationDefaults</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">AuthenticationScheme</span><span style="color:#c0c5ce;">)
+        .</span><span style="color:#bf616a;">AddCookie</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">options </span><span style="color:#b48ead;">=&gt; </span><span style="color:#bf616a;">options</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">LoginPath </span><span style="color:#c0c5ce;">= new PathString(&quot;</span><span style="color:#a3be8c;">/account/login</span><span style="color:#c0c5ce;">&quot;));
+
+    ...
+}
+
+</span><span style="color:#b48ead;">public void </span><span style="color:#8fa1b3;">Configure</span><span style="color:#c0c5ce;">(IApplicationBuilder </span><span style="color:#bf616a;">app</span><span style="color:#c0c5ce;">, IHostingEnvironment </span><span style="color:#bf616a;">env</span><span style="color:#c0c5ce;">) {
+    ...
+
+    </span><span style="color:#65737e;">//Adds the authentication middleware to the pipeline
+    </span><span style="color:#bf616a;">app</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">UseAuthentication</span><span style="color:#c0c5ce;">();
+
+    ...
+}
+</span></code></pre>
+<p>In <code>ConfigureServices</code> the <code>AddAuthentication</code> method is called to add the authentication middleware to the services collection. There is a chained method call to <code>AddCookie</code> that adds a Cookies authentication handler with an option configured to the authentication middlware.</p>
+<p>In the <code>Configure</code> method, the method <code>UseAuthentication</code> is called to add the authentication middleware to the execution pipeline. This is what allows the authentication middleware to actually run on every request.</p>
+<h4 id="class-applicationuser">class ApplicationUser<a class="zola-anchor" href="#class-applicationuser" aria-label="Anchor link for: class-applicationuser">§</a>
+</h4>
+<p>The app needs a representation of a user. This simple class stores a username and password for a user.</p>
+<pre style="background-color:#2b303b;">
+<code class="language-cs" data-lang="cs"><span style="color:#b48ead;">public class </span><span style="color:#ebcb8b;">ApplicationUser </span><span style="color:#eff1f5;">{
+    </span><span style="color:#b48ead;">public string </span><span style="color:#bf616a;">UserName </span><span style="color:#eff1f5;">{ </span><span style="color:#b48ead;">get</span><span style="color:#eff1f5;">; </span><span style="color:#b48ead;">set</span><span style="color:#eff1f5;">; }
+    </span><span style="color:#b48ead;">public string </span><span style="color:#bf616a;">Password </span><span style="color:#eff1f5;">{ </span><span style="color:#b48ead;">get</span><span style="color:#eff1f5;">; </span><span style="color:#b48ead;">set</span><span style="color:#eff1f5;">; }
+
+    </span><span style="color:#b48ead;">public </span><span style="color:#8fa1b3;">ApplicationUser</span><span style="color:#eff1f5;">() { }
+    </span><span style="color:#b48ead;">public </span><span style="color:#8fa1b3;">ApplicationUser</span><span style="color:#eff1f5;">(</span><span style="color:#b48ead;">string </span><span style="color:#bf616a;">username</span><span style="color:#eff1f5;">, </span><span style="color:#b48ead;">string </span><span style="color:#bf616a;">password</span><span style="color:#eff1f5;">) {
+        </span><span style="color:#bf616a;">this</span><span style="color:#eff1f5;">.</span><span style="color:#bf616a;">UserName </span><span style="color:#c0c5ce;">= </span><span style="color:#bf616a;">username</span><span style="color:#eff1f5;">;
+        </span><span style="color:#bf616a;">this</span><span style="color:#eff1f5;">.</span><span style="color:#bf616a;">Password </span><span style="color:#c0c5ce;">= </span><span style="color:#bf616a;">password</span><span style="color:#eff1f5;">;
+    }
+}
+</span></code></pre><h4 id="class-accountcontroller">class AccountController<a class="zola-anchor" href="#class-accountcontroller" aria-label="Anchor link for: class-accountcontroller">§</a>
+</h4>
+<p>In order to do anything meaningful with the authentication middleware and handler, some actions are needed. Below is an MVC Controller called <code>AccountController</code> which contains methods that do the work of signing in and out. This class handles the verbs <em>SignIn</em> and <em>SignOut</em> through the HttpContext's convenience methods, which in turn invoke the <code>SignInAsync</code> and <code>SignOutAsync</code> methods on the specified or default auth handler.</p>
+<pre style="background-color:#2b303b;">
+<code class="language-cs" data-lang="cs"><span style="color:#b48ead;">public class </span><span style="color:#ebcb8b;">AccountController </span><span style="color:#eff1f5;">: </span><span style="color:#a3be8c;">Controller </span><span style="color:#eff1f5;">{
+    </span><span style="color:#65737e;">//A very simplistic user store. This would normally be a database or similar.
+    </span><span style="color:#b48ead;">public </span><span style="color:#eff1f5;">List&lt;ApplicationUser&gt; </span><span style="color:#bf616a;">Users </span><span style="color:#b48ead;">=&gt; </span><span style="color:#c0c5ce;">new </span><span style="color:#eff1f5;">List&lt;ApplicationUser&gt;() {
+        </span><span style="color:#c0c5ce;">new </span><span style="color:#eff1f5;">ApplicationUser { </span><span style="color:#bf616a;">UserName </span><span style="color:#c0c5ce;">= &quot;</span><span style="color:#a3be8c;">darkhelmet</span><span style="color:#c0c5ce;">&quot;</span><span style="color:#eff1f5;">, </span><span style="color:#bf616a;">Password </span><span style="color:#c0c5ce;">= &quot;</span><span style="color:#a3be8c;">vespa</span><span style="color:#c0c5ce;">&quot; </span><span style="color:#eff1f5;">},
+        </span><span style="color:#c0c5ce;">new </span><span style="color:#eff1f5;">ApplicationUser{ </span><span style="color:#bf616a;">UserName </span><span style="color:#c0c5ce;">= &quot;</span><span style="color:#a3be8c;">prezscroob</span><span style="color:#c0c5ce;">&quot;</span><span style="color:#eff1f5;">, </span><span style="color:#bf616a;">Password </span><span style="color:#c0c5ce;">= &quot;</span><span style="color:#a3be8c;">12345</span><span style="color:#c0c5ce;">&quot; </span><span style="color:#eff1f5;">}
+    };
+
+    </span><span style="color:#b48ead;">public </span><span style="color:#eff1f5;">IActionResult </span><span style="color:#8fa1b3;">Login</span><span style="color:#eff1f5;">(</span><span style="color:#b48ead;">string </span><span style="color:#bf616a;">returnUrl </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">null</span><span style="color:#eff1f5;">) {
+        </span><span style="color:#bf616a;">TempData</span><span style="color:#eff1f5;">[</span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">returnUrl</span><span style="color:#c0c5ce;">&quot;</span><span style="color:#eff1f5;">] </span><span style="color:#c0c5ce;">= </span><span style="color:#bf616a;">returnUrl</span><span style="color:#eff1f5;">;
+        </span><span style="color:#b48ead;">return </span><span style="color:#bf616a;">View</span><span style="color:#eff1f5;">();
+    }
+
+    [</span><span style="color:#bf616a;">HttpPost</span><span style="color:#eff1f5;">]
+    </span><span style="color:#b48ead;">public async </span><span style="color:#eff1f5;">Task&lt;IActionResult&gt; </span><span style="color:#8fa1b3;">Login</span><span style="color:#eff1f5;">(ApplicationUser </span><span style="color:#bf616a;">user</span><span style="color:#eff1f5;">, </span><span style="color:#b48ead;">string </span><span style="color:#bf616a;">returnUrl </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">null</span><span style="color:#eff1f5;">) {
+        </span><span style="color:#b48ead;">const string </span><span style="color:#bf616a;">badUserNameOrPasswordMessage </span><span style="color:#c0c5ce;">= &quot;</span><span style="color:#a3be8c;">Username or password is incorrect.</span><span style="color:#c0c5ce;">&quot;</span><span style="color:#eff1f5;">;
+        </span><span style="color:#b48ead;">if </span><span style="color:#eff1f5;">(</span><span style="color:#bf616a;">user </span><span style="color:#c0c5ce;">== </span><span style="color:#d08770;">null</span><span style="color:#eff1f5;">) {
+            </span><span style="color:#b48ead;">return </span><span style="color:#bf616a;">BadRequest</span><span style="color:#eff1f5;">(</span><span style="color:#bf616a;">badUserNameOrPasswordMessage</span><span style="color:#eff1f5;">);
+        }
+        </span><span style="color:#b48ead;">var </span><span style="color:#bf616a;">lookupUser </span><span style="color:#c0c5ce;">= </span><span style="color:#bf616a;">Users</span><span style="color:#eff1f5;">.</span><span style="color:#bf616a;">FirstOrDefault</span><span style="color:#eff1f5;">(</span><span style="color:#bf616a;">u </span><span style="color:#b48ead;">=&gt; </span><span style="color:#bf616a;">u</span><span style="color:#eff1f5;">.</span><span style="color:#bf616a;">UserName </span><span style="color:#c0c5ce;">== </span><span style="color:#bf616a;">user</span><span style="color:#eff1f5;">.</span><span style="color:#bf616a;">UserName</span><span style="color:#eff1f5;">);
+
+        </span><span style="color:#b48ead;">if </span><span style="color:#eff1f5;">(</span><span style="color:#bf616a;">lookupUser</span><span style="color:#eff1f5;">?.</span><span style="color:#bf616a;">Password </span><span style="color:#c0c5ce;">!= </span><span style="color:#bf616a;">user</span><span style="color:#eff1f5;">.</span><span style="color:#bf616a;">Password</span><span style="color:#eff1f5;">) {
+            </span><span style="color:#b48ead;">return </span><span style="color:#bf616a;">BadRequest</span><span style="color:#eff1f5;">(</span><span style="color:#bf616a;">badUserNameOrPasswordMessage</span><span style="color:#eff1f5;">);
+        }
+
+        </span><span style="color:#b48ead;">var </span><span style="color:#bf616a;">identity </span><span style="color:#c0c5ce;">= new </span><span style="color:#eff1f5;">ClaimsIdentity(</span><span style="color:#bf616a;">CookieAuthenticationDefaults</span><span style="color:#eff1f5;">.</span><span style="color:#bf616a;">AuthenticationScheme</span><span style="color:#eff1f5;">);
+        </span><span style="color:#bf616a;">identity</span><span style="color:#eff1f5;">.</span><span style="color:#bf616a;">AddClaim</span><span style="color:#eff1f5;">(</span><span style="color:#c0c5ce;">new </span><span style="color:#eff1f5;">Claim(</span><span style="color:#bf616a;">ClaimTypes</span><span style="color:#eff1f5;">.</span><span style="color:#bf616a;">Name</span><span style="color:#eff1f5;">, </span><span style="color:#bf616a;">lookupUser</span><span style="color:#eff1f5;">.</span><span style="color:#bf616a;">UserName</span><span style="color:#eff1f5;">));
+
+        </span><span style="color:#b48ead;">await </span><span style="color:#bf616a;">HttpContext</span><span style="color:#eff1f5;">.</span><span style="color:#bf616a;">SignInAsync</span><span style="color:#eff1f5;">(</span><span style="color:#bf616a;">CookieAuthenticationDefaults</span><span style="color:#eff1f5;">.</span><span style="color:#bf616a;">AuthenticationScheme</span><span style="color:#eff1f5;">, </span><span style="color:#c0c5ce;">new </span><span style="color:#eff1f5;">ClaimsPrincipal(</span><span style="color:#bf616a;">identity</span><span style="color:#eff1f5;">));
+
+        </span><span style="color:#b48ead;">if</span><span style="color:#eff1f5;">(</span><span style="color:#bf616a;">returnUrl </span><span style="color:#c0c5ce;">== </span><span style="color:#d08770;">null</span><span style="color:#eff1f5;">) {
+            </span><span style="color:#bf616a;">returnUrl </span><span style="color:#c0c5ce;">= </span><span style="color:#bf616a;">TempData</span><span style="color:#eff1f5;">[</span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">returnUrl</span><span style="color:#c0c5ce;">&quot;</span><span style="color:#eff1f5;">]?.</span><span style="color:#bf616a;">ToString</span><span style="color:#eff1f5;">();
+        }
+
+        </span><span style="color:#b48ead;">if</span><span style="color:#eff1f5;">(</span><span style="color:#bf616a;">returnUrl </span><span style="color:#c0c5ce;">!= </span><span style="color:#d08770;">null</span><span style="color:#eff1f5;">) {
+            </span><span style="color:#b48ead;">return </span><span style="color:#bf616a;">Redirect</span><span style="color:#eff1f5;">(</span><span style="color:#bf616a;">returnUrl</span><span style="color:#eff1f5;">);
+        }
+        
+        </span><span style="color:#b48ead;">return </span><span style="color:#bf616a;">RedirectToAction</span><span style="color:#eff1f5;">(</span><span style="color:#b48ead;">nameof</span><span style="color:#eff1f5;">(HomeController.Index), </span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">Home</span><span style="color:#c0c5ce;">&quot;</span><span style="color:#eff1f5;">);
+    }
+
+    </span><span style="color:#b48ead;">public async </span><span style="color:#eff1f5;">Task&lt;IActionResult&gt; </span><span style="color:#8fa1b3;">Logout</span><span style="color:#eff1f5;">() {
+        </span><span style="color:#b48ead;">await </span><span style="color:#bf616a;">HttpContext</span><span style="color:#eff1f5;">.</span><span style="color:#bf616a;">SignOutAsync</span><span style="color:#eff1f5;">(</span><span style="color:#bf616a;">CookieAuthenticationDefaults</span><span style="color:#eff1f5;">.</span><span style="color:#bf616a;">AuthenticationScheme</span><span style="color:#eff1f5;">);
+        </span><span style="color:#b48ead;">return </span><span style="color:#bf616a;">RedirectToAction</span><span style="color:#eff1f5;">(</span><span style="color:#b48ead;">nameof</span><span style="color:#eff1f5;">(HomeController.Index), </span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">Home</span><span style="color:#c0c5ce;">&quot;</span><span style="color:#eff1f5;">);
+    }
+}
+</span></code></pre>
+<p>First, the class contains a <code>List&lt;string&gt; Users</code> that takes the place of the user store and holds two users. This is not a good method to use in production but makes it easy to demonstrate the authentication code without added complexity.</p>
+<pre style="background-color:#2b303b;">
+<code class="language-cs" data-lang="cs"><span style="color:#b48ead;">public </span><span style="color:#c0c5ce;">List&lt;ApplicationUser&gt; </span><span style="color:#bf616a;">Users </span><span style="color:#c0c5ce;">=&gt; new List&lt;ApplicationUser&gt;() {
+    new ApplicationUser { </span><span style="color:#bf616a;">UserName </span><span style="color:#c0c5ce;">= &quot;</span><span style="color:#a3be8c;">darkhelmet</span><span style="color:#c0c5ce;">&quot;, </span><span style="color:#bf616a;">Password </span><span style="color:#c0c5ce;">= &quot;</span><span style="color:#a3be8c;">vespa</span><span style="color:#c0c5ce;">&quot; },
+    new ApplicationUser{ </span><span style="color:#bf616a;">UserName </span><span style="color:#c0c5ce;">= &quot;</span><span style="color:#a3be8c;">prezscroob</span><span style="color:#c0c5ce;">&quot;, </span><span style="color:#bf616a;">Password </span><span style="color:#c0c5ce;">= &quot;</span><span style="color:#a3be8c;">12345</span><span style="color:#c0c5ce;">&quot; }
+};
+</span></code></pre>
+<p>There are also two overloaded <code>Login</code> methods. The first one takes a string <code>returnUrl</code> and stores it in the controller's <code>TempData</code> repository. It then returns the default view for the action.</p>
+<pre style="background-color:#2b303b;">
+<code class="language-cs" data-lang="cs"><span style="color:#b48ead;">public </span><span style="color:#c0c5ce;">IActionResult </span><span style="color:#8fa1b3;">Login</span><span style="color:#c0c5ce;">(</span><span style="color:#b48ead;">string </span><span style="color:#bf616a;">returnUrl </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">null</span><span style="color:#c0c5ce;">) {
+    </span><span style="color:#bf616a;">TempData</span><span style="color:#c0c5ce;">[&quot;</span><span style="color:#a3be8c;">returnUrl</span><span style="color:#c0c5ce;">&quot;] = </span><span style="color:#bf616a;">returnUrl</span><span style="color:#c0c5ce;">;
+    </span><span style="color:#b48ead;">return </span><span style="color:#bf616a;">View</span><span style="color:#c0c5ce;">();
+}
+</span></code></pre>
+<p>The second <code>Login</code> method does the work of logging in a user and takes an <code>ApplicationUser</code> object and a string <code>returnUrl</code>. This method is also decorated with the <code>[HttpPost]</code> attribute which means it can not be called without an http POST action.</p>
+<p>The method first checks to ensure there was a user object submitted, and that the username and password match one of the users in the user store.</p>
+<pre style="background-color:#2b303b;">
+<code class="language-cs" data-lang="cs"><span style="color:#b48ead;">const string </span><span style="color:#bf616a;">badUserNameOrPasswordMessage </span><span style="color:#c0c5ce;">= &quot;</span><span style="color:#a3be8c;">Username or password is incorrect.</span><span style="color:#c0c5ce;">&quot;;
+</span><span style="color:#b48ead;">if </span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">user </span><span style="color:#c0c5ce;">== </span><span style="color:#d08770;">null</span><span style="color:#c0c5ce;">) {
+    </span><span style="color:#b48ead;">return </span><span style="color:#bf616a;">BadRequest</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">badUserNameOrPasswordMessage</span><span style="color:#c0c5ce;">);
+}
+</span><span style="color:#b48ead;">var </span><span style="color:#bf616a;">lookupUser </span><span style="color:#c0c5ce;">= </span><span style="color:#bf616a;">Users</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">FirstOrDefault</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">u </span><span style="color:#b48ead;">=&gt; </span><span style="color:#bf616a;">u</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">UserName </span><span style="color:#c0c5ce;">== </span><span style="color:#bf616a;">user</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">UserName</span><span style="color:#c0c5ce;">);
+
+</span><span style="color:#b48ead;">if </span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">lookupUser</span><span style="color:#c0c5ce;">?.</span><span style="color:#bf616a;">Password </span><span style="color:#c0c5ce;">!= </span><span style="color:#bf616a;">user</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">Password</span><span style="color:#c0c5ce;">) {
+    </span><span style="color:#b48ead;">return </span><span style="color:#bf616a;">BadRequest</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">badUserNameOrPasswordMessage</span><span style="color:#c0c5ce;">);
+}
+</span></code></pre>
+<p>If both of those conditions are true, it creates a new ClaimsIdentity. The constructor, in this case, is setting the AuthenticationType property of the ClaimsIdentity. According to <a href="https://andrewlock.net/introduction-to-authentication-with-asp-net-core/" title="Introduction to Authentication with ASP.NET Core - Andrew Lock">Andrew Lock</a>, the AuthenticationType property can be any string and represents how the identity was verified.</p>
+<p>In this case, I set the AuthenticationType to the cookies authentication scheme because I am using cookies authentication. However, at this step it does not need to be set to that. I could just as easily set it to &quot;password&quot; or &quot;multipass&quot;, or anything else. When using the identity later I could use this property to verify that I trust the authentication method used to authenticate this identity.</p>
+<pre style="background-color:#2b303b;">
+<code class="language-cs" data-lang="cs"><span style="color:#b48ead;">var </span><span style="color:#bf616a;">identity </span><span style="color:#c0c5ce;">= new ClaimsIdentity(</span><span style="color:#bf616a;">CookieAuthenticationDefaults</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">AuthenticationScheme</span><span style="color:#c0c5ce;">);
+</span><span style="color:#bf616a;">identity</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">AddClaim</span><span style="color:#c0c5ce;">(new Claim(</span><span style="color:#bf616a;">ClaimTypes</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">Name</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">lookupUser</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">UserName</span><span style="color:#c0c5ce;">));
+</span></code></pre>
+<p>The method then calls <code>HttpContext.SignInAsync()</code>, passing in the cookies authentication scheme and a new <code>ClaimsPrincipal</code> created from the identity that was created a few lines above.</p>
+<pre style="background-color:#2b303b;">
+<code class="language-cs" data-lang="cs"><span style="color:#b48ead;">await </span><span style="color:#bf616a;">HttpContext</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">SignInAsync</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">CookieAuthenticationDefaults</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">AuthenticationScheme</span><span style="color:#c0c5ce;">, new ClaimsPrincipal(</span><span style="color:#bf616a;">identity</span><span style="color:#c0c5ce;">));
+</span></code></pre>
+<p>Lastly, the method determines the returnUrl, if any, and redirects the user to either the returnUrl or the home page if there isn't one.</p>
+<pre style="background-color:#2b303b;">
+<code class="language-cs" data-lang="cs"><span style="color:#b48ead;">if</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">returnUrl </span><span style="color:#c0c5ce;">== </span><span style="color:#d08770;">null</span><span style="color:#c0c5ce;">) {
+    </span><span style="color:#bf616a;">returnUrl </span><span style="color:#c0c5ce;">= </span><span style="color:#bf616a;">TempData</span><span style="color:#c0c5ce;">[&quot;</span><span style="color:#a3be8c;">returnUrl</span><span style="color:#c0c5ce;">&quot;]?.</span><span style="color:#bf616a;">ToString</span><span style="color:#c0c5ce;">();
+}
+</span><span style="color:#b48ead;">if</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">returnUrl </span><span style="color:#c0c5ce;">!= </span><span style="color:#d08770;">null</span><span style="color:#c0c5ce;">) {
+    </span><span style="color:#b48ead;">return </span><span style="color:#bf616a;">Redirect</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">returnUrl</span><span style="color:#c0c5ce;">);
+}
+
+</span><span style="color:#b48ead;">return </span><span style="color:#bf616a;">RedirectToAction</span><span style="color:#c0c5ce;">(</span><span style="color:#b48ead;">nameof</span><span style="color:#c0c5ce;">(HomeController.Index), &quot;</span><span style="color:#a3be8c;">Home</span><span style="color:#c0c5ce;">&quot;);
+</span></code></pre><h4 id="login-cshtml">Login.cshtml<a class="zola-anchor" href="#login-cshtml" aria-label="Anchor link for: login-cshtml">§</a>
+</h4>
+<p>The <code>AccountController</code> exists, but the users need a way to see the login form and send their credentials to the <code>Login</code> action of the controller. This view will solve both of those problems.</p>
+<pre style="background-color:#2b303b;">
+<code class="language-cs" data-lang="cs"><span style="color:#c0c5ce;">@model </span><span style="color:#bf616a;">ApplicationUser
+</span><span style="color:#c0c5ce;">@{
+    &lt;</span><span style="color:#bf616a;">form asp</span><span style="color:#c0c5ce;">-</span><span style="color:#bf616a;">antiforgery</span><span style="color:#c0c5ce;">=&quot;</span><span style="color:#a3be8c;">true</span><span style="color:#c0c5ce;">&quot; </span><span style="color:#bf616a;">asp</span><span style="color:#c0c5ce;">-</span><span style="color:#bf616a;">controller</span><span style="color:#c0c5ce;">=&quot;</span><span style="color:#a3be8c;">Account</span><span style="color:#c0c5ce;">&quot; </span><span style="color:#bf616a;">asp</span><span style="color:#c0c5ce;">-</span><span style="color:#bf616a;">action</span><span style="color:#c0c5ce;">=&quot;</span><span style="color:#a3be8c;">Login</span><span style="color:#c0c5ce;">&quot;&gt;
+        </span><span style="color:#bf616a;">User name</span><span style="color:#c0c5ce;">: &lt;</span><span style="color:#bf616a;">input name</span><span style="color:#c0c5ce;">=&quot;</span><span style="color:#a3be8c;">username</span><span style="color:#c0c5ce;">&quot; </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">=&quot;</span><span style="color:#a3be8c;">text</span><span style="color:#c0c5ce;">&quot; /&gt;
+        </span><span style="color:#bf616a;">Password</span><span style="color:#c0c5ce;">: &lt;</span><span style="color:#bf616a;">input name</span><span style="color:#c0c5ce;">=&quot;</span><span style="color:#a3be8c;">password</span><span style="color:#c0c5ce;">&quot; </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">=&quot;</span><span style="color:#a3be8c;">password</span><span style="color:#c0c5ce;">&quot; /&gt;
+        &lt;</span><span style="color:#bf616a;">input name</span><span style="color:#c0c5ce;">=&quot;</span><span style="color:#a3be8c;">submit</span><span style="color:#c0c5ce;">&quot; </span><span style="color:#bf616a;">value</span><span style="color:#c0c5ce;">=&quot;</span><span style="color:#a3be8c;">Login</span><span style="color:#c0c5ce;">&quot; </span><span style="color:#bf616a;">type</span><span style="color:#c0c5ce;">=&quot;</span><span style="color:#a3be8c;">submit</span><span style="color:#c0c5ce;">&quot; /&gt;
+        &lt;</span><span style="color:#bf616a;">input type</span><span style="color:#c0c5ce;">=&quot;</span><span style="color:#a3be8c;">hidden</span><span style="color:#c0c5ce;">&quot; </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">=&quot;</span><span style="color:#a3be8c;">returnUrl</span><span style="color:#c0c5ce;">&quot; </span><span style="color:#bf616a;">value</span><span style="color:#c0c5ce;">=&quot;</span><span style="color:#a3be8c;">@TempData[</span><span style="color:#c0c5ce;">&quot;</span><span style="color:#bf616a;">returnUrl</span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">]</span><span style="color:#c0c5ce;">&quot; /&gt;
+    &lt;/</span><span style="color:#bf616a;">form</span><span style="color:#c0c5ce;">&gt;
+}
+</span></code></pre><h4 id="class-homecontroller">class HomeController<a class="zola-anchor" href="#class-homecontroller" aria-label="Anchor link for: class-homecontroller">§</a>
+</h4>
+<p>Now that there is an AccountController to log users in and out, there must be something that uses it. This is the <code>HomeController</code>'s Members method. Notice the <code>[Authorize]</code> attribute has been added.</p>
+<pre style="background-color:#2b303b;">
+<code class="language-cs" data-lang="cs"><span style="color:#c0c5ce;">[</span><span style="color:#bf616a;">Authorize</span><span style="color:#c0c5ce;">]
+</span><span style="color:#b48ead;">public </span><span style="color:#c0c5ce;">IActionResult </span><span style="color:#8fa1b3;">Members</span><span style="color:#c0c5ce;">() {
+    </span><span style="color:#b48ead;">return </span><span style="color:#bf616a;">View</span><span style="color:#c0c5ce;">();
+}
+</span></code></pre>
+<p>The <code>[Authorize]</code> attribute decorating this action method will cause the authorization filter to run. That filter will determine if a user has been authenticated and, if not, issue the <em>Challenge</em> verb through the authentication handler, which will prompt the user to log in.</p>
+<h4 id="members-cshtml">Members.cshtml<a class="zola-anchor" href="#members-cshtml" aria-label="Anchor link for: members-cshtml">§</a>
+</h4>
+<p>With almost any new controller action, a view will be needed to show the user something. This is what the Members view looks like behind the curtains.</p>
+<pre style="background-color:#2b303b;">
+<code class="language-cs" data-lang="cs"><span style="background-color:#bf616a;color:#2b303b;">@</span><span style="color:#c0c5ce;">{
+    </span><span style="color:#bf616a;">ViewBag</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">Title </span><span style="color:#c0c5ce;">= &quot;</span><span style="color:#a3be8c;">Members Only</span><span style="color:#c0c5ce;">&quot;;
+}
+
+&lt;</span><span style="color:#bf616a;">h2</span><span style="color:#c0c5ce;">&gt;</span><span style="color:#bf616a;">@ViewBag</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">Title</span><span style="color:#c0c5ce;">&lt;/</span><span style="color:#bf616a;">h2</span><span style="color:#c0c5ce;">&gt;
+
+&lt;</span><span style="color:#bf616a;">p</span><span style="color:#c0c5ce;">&gt;</span><span style="color:#bf616a;">You must be a member</span><span style="color:#c0c5ce;">. </span><span style="color:#bf616a;">Congratulations</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">@User</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">Identity</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">Name</span><span style="color:#c0c5ce;">, </span><span style="color:#b48ead;">on </span><span style="color:#bf616a;">your membership</span><span style="color:#c0c5ce;">!&lt;/</span><span style="color:#bf616a;">p</span><span style="color:#c0c5ce;">&gt;
+
+</span></code></pre><h4 id="layout-cshtml">_Layout.cshtml<a class="zola-anchor" href="#layout-cshtml" aria-label="Anchor link for: layout-cshtml">§</a>
+</h4>
+<p>Lastly, a link or button to let the user click to log in or out would be very helpful. The aspnetcore templates tend to use a logout form that contains a link that uses javascript to submit the form with the http POST method. This is likely more secure than the example in the code below, but for the purposes of this example, a simple link and http GET will suffice.</p>
+<p>The following code was added to the bootstrap menu in the _Layout.cshtml file and will appear on every page using that layout as a template. It provides both login and logout options.</p>
+<pre style="background-color:#2b303b;">
+<code class="language-cs" data-lang="cs"><span style="color:#bf616a;">@if</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">User</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">Identity</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">IsAuthenticated</span><span style="color:#c0c5ce;">) {
+    &lt;</span><span style="color:#bf616a;">li</span><span style="color:#c0c5ce;">&gt;&lt;</span><span style="color:#bf616a;">a asp</span><span style="color:#c0c5ce;">-</span><span style="color:#bf616a;">area</span><span style="color:#c0c5ce;">=&quot;&quot; </span><span style="color:#bf616a;">asp</span><span style="color:#c0c5ce;">-</span><span style="color:#bf616a;">controller</span><span style="color:#c0c5ce;">=&quot;</span><span style="color:#a3be8c;">Account</span><span style="color:#c0c5ce;">&quot; </span><span style="color:#bf616a;">asp</span><span style="color:#c0c5ce;">-</span><span style="color:#bf616a;">action</span><span style="color:#c0c5ce;">=&quot;</span><span style="color:#a3be8c;">Logout</span><span style="color:#c0c5ce;">&quot;&gt;</span><span style="color:#bf616a;">Logout</span><span style="color:#c0c5ce;">&lt;/</span><span style="color:#bf616a;">a</span><span style="color:#c0c5ce;">&gt;&lt;/</span><span style="color:#bf616a;">li</span><span style="color:#c0c5ce;">&gt;
+} </span><span style="background-color:#bf616a;color:#2b303b;">else</span><span style="color:#c0c5ce;"> {
+    &lt;</span><span style="color:#bf616a;">li</span><span style="color:#c0c5ce;">&gt;&lt;</span><span style="color:#bf616a;">a asp</span><span style="color:#c0c5ce;">-</span><span style="color:#bf616a;">area</span><span style="color:#c0c5ce;">=&quot;&quot; </span><span style="color:#bf616a;">asp</span><span style="color:#c0c5ce;">-</span><span style="color:#bf616a;">controller</span><span style="color:#c0c5ce;">=&quot;</span><span style="color:#a3be8c;">Account</span><span style="color:#c0c5ce;">&quot; </span><span style="color:#bf616a;">asp</span><span style="color:#c0c5ce;">-</span><span style="color:#bf616a;">action</span><span style="color:#c0c5ce;">=&quot;</span><span style="color:#a3be8c;">Login</span><span style="color:#c0c5ce;">&quot;&gt;</span><span style="color:#bf616a;">Login</span><span style="color:#c0c5ce;">&lt;/</span><span style="color:#bf616a;">a</span><span style="color:#c0c5ce;">&gt;&lt;/</span><span style="color:#bf616a;">li</span><span style="color:#c0c5ce;">&gt;
+}
+</span></code></pre><h2 id="conclusion">Conclusion<a class="zola-anchor" href="#conclusion" aria-label="Anchor link for: conclusion">§</a>
+</h2>
+<p>The auth system is interesting and well designed. It's very extensible and will easily work with custom authentication handlers. Understanding how this system works under the hood is the first step in using it beyond the template defaults. All kinds of custom authentication processes are possible by using the components themselves instead of just relying on the templates and convenience methods. Now go write code.</p>
+<h2 id="changelog">Changelog<a class="zola-anchor" href="#changelog" aria-label="Anchor link for: changelog">§</a>
+</h2>
+<ul>
+<li>18 April 2018
+<ul>
+<li>Updated some parts of the text to add clarity
+<ul>
+<li>Clarified the AuthenticationType property of ClaimsIdentity</li>
+<li>Added explanation of Claim, ClaimsIdentity, and ClaimsPrincipal</li>
+</ul>
+</li>
+<li>Updated code samples to match the sample project</li>
+<li>Fixed the value of the &quot;returnUrl&quot; input in the Login.cshtml example
+<ul>
+<li>Was '@Model', which is an ApplicationUser object</li>
+<li>Now '@TempData[&quot;returnUrl&quot;]', which is the string that contains the actual URL needed</li>
+</ul>
+</li>
+<li>Fixed typos</li>
+<li>Changed the Authorized page example from the About page to a Members page and added a view to go with it</li>
+</ul>
+</li>
+</ul>
+
+
+        
+    
+        
+
+    <div id="disqus_thread"></div>
+    <script>
+        /**
+        *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+        *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+        
+        var disqus_config = function () {
+            this.page.url = 'https://digitalmccullough.com/blog/aspnetcore-auth-system-demystified/';  // Replace PAGE_URL with your page's canonical URL variable
+            this.page.identifier = 'https://digitalmccullough.com/blog/aspnetcore-auth-system-demystified/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        };
+        
+        (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        s.src = 'https://digitalmccullough.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+    
+
+        
+        
+    </article></div>
+            
+    <div class="pagination">
+        <div class="pagination__buttons">
+            </div>
+    </div>
+<footer class="footer">
+                    <div class="footer__inner"><div class="copyright copyright--user">Copyright &copy; 2021 :: Powered by Zola</div>
+    <script type="text/javascript" src="https:&#x2F;&#x2F;digitalmccullough.com&#x2F;assets&#x2F;js&#x2F;main.js"></script>
+</div>
+                    
+
+                </footer></div>
+    </body>
+</html>

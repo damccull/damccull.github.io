@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+	<title>free-time programmer - Wyam</title>
+	<subtitle>read this stuff I wrote on my blog...</subtitle>
+	<link href="https://digitalmccullough.com/tags/wyam/atom.xml" rel="self" type="application/atom+xml"/>
+  <link href="https://digitalmccullough.com"/>
+	<generator uri="https://www.getzola.org/">Zola</generator>
+	<updated>2018-05-03T02:10:00+00:00</updated>
+	<id>https://digitalmccullough.com/tags/wyam/atom.xml</id>
+	<entry xml:lang="en">
+		<title>Using Wyam on GitLab Pages with Continuous Integration</title>
+		<published>2018-05-03T02:10:00+00:00</published>
+		<updated>2018-05-03T02:10:00+00:00</updated>
+		<link href="https://digitalmccullough.com/blog/wyam-ci-on-gitlab-pages/" type="text/html"/>
+		<id>https://digitalmccullough.com/blog/wyam-ci-on-gitlab-pages/</id>
+		<content type="html">&lt;div class=&quot;note&quot;&gt;
+    NOTE: Wyam has been supersceded by a project called Statiq. This post is not necessarily accurate any longer and the instructions may or may not work. They will probably not work at all for Statiq.
+&lt;&#x2F;div&gt;
+&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;a class=&quot;zola-anchor&quot; href=&quot;#introduction&quot; aria-label=&quot;Anchor link for: introduction&quot;&gt;§&lt;&#x2F;a&gt;
+&lt;&#x2F;h1&gt;
+&lt;p&gt;Continuous Integration with Wyam is a quest many have considered and promptly rejected because...it&#x27;s hard. It&#x27;s not natively supported on many platforms because it doesn&#x27;t run on linux. At least not at the time of this article&#x27;s publication. But take heart, brave adventurer, for all is not lost! Two possibilites exist to triumph in your quest: either wait for .NET Core support or follow this very tutorial.&lt;&#x2F;p&gt;
+&lt;p&gt;Yes, you heard right! This short tutorial will have you continuously integrating your Wyam site into GitLab pages (and maybe other places with the right modifications (not covered here)) before you know it. Let&#x27;s get started.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;act-i-setting-out-on-the-quest&quot;&gt;Act I - Setting Out on the Quest&lt;a class=&quot;zola-anchor&quot; href=&quot;#act-i-setting-out-on-the-quest&quot; aria-label=&quot;Anchor link for: act-i-setting-out-on-the-quest&quot;&gt;§&lt;&#x2F;a&gt;
+&lt;&#x2F;h1&gt;
+&lt;p&gt;First thing&#x27;s first: I&#x27;m not going to hold your hand on every detail. You&#x27;re a brave adventurer and you can handle a little RTFM and basic setup.&lt;&#x2F;p&gt;
+&lt;p&gt;Now, you need a &lt;a href=&quot;https:&#x2F;&#x2F;gitlab.com&quot;&gt;gitlab.com&lt;&#x2F;a&gt; account. This will probably work on a self-hosted gitlab as well, but no promises. For this tutorial I recommend just signing up and testing it live.&lt;&#x2F;p&gt;
+&lt;p&gt;You should also &lt;a href=&quot;https:&#x2F;&#x2F;docs.gitlab.com&#x2F;runner&#x2F;&quot; title=&quot;GitLab Runner Documentation&quot;&gt;read up on gitlab runners&lt;&#x2F;a&gt; so you understand what they are and what they can do.&lt;&#x2F;p&gt;
+&lt;p&gt;Next you should &lt;a href=&quot;https:&#x2F;&#x2F;docs.gitlab.com&#x2F;ee&#x2F;user&#x2F;project&#x2F;pages&#x2F;&quot; title=&quot;GitLab Pages Documentation&quot;&gt;create a GitLab Pages repo&lt;&#x2F;a&gt; to store your generated content and display it to the world. You can fork an existing project (then delete everything) or just create a blank one.&lt;&#x2F;p&gt;
+&lt;p&gt;Lastly, you will need a Windows computer of some kind, with 7-zip installed and on your PATH, to run all the fun on.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;act-ii-meeting-the-monster&quot;&gt;Act II - Meeting the Monster&lt;a class=&quot;zola-anchor&quot; href=&quot;#act-ii-meeting-the-monster&quot; aria-label=&quot;Anchor link for: act-ii-meeting-the-monster&quot;&gt;§&lt;&#x2F;a&gt;
+&lt;&#x2F;h1&gt;
+&lt;p&gt;Now that you have a GitLab account and a Pages repo set up in it, let&#x27;s get to work.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;set-up-your-gitlab-runner&quot;&gt;Set up your GitLab Runner&lt;a class=&quot;zola-anchor&quot; href=&quot;#set-up-your-gitlab-runner&quot; aria-label=&quot;Anchor link for: set-up-your-gitlab-runner&quot;&gt;§&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;Download the Windows version of the GitLab runner executable to a Windows machine that you want to use to actually run this stuff and open a command prompt to the location you decide to keep it.&lt;&#x2F;p&gt;
+&lt;p&gt;You should, at this point, read the fine documentation on &lt;a href=&quot;https:&#x2F;&#x2F;docs.gitlab.com&#x2F;runner&#x2F;install&#x2F;windows.html&quot; title=&quot;Installing GitLab Runner on Windows&quot;&gt;Installing GitLab Runner on Windows&lt;&#x2F;a&gt;, but just in case you are being extraordinarily lazy...&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;&quot;&gt;
+&lt;code&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;gitlab-runner.exe install
+gitlab-runner.exe start
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Above is recommended, but if you want to run NOT run it as the built in system account...&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;&quot;&gt;
+&lt;code&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;gitlab-runner.exe install --user &amp;lt;some.username&amp;gt; --password &amp;lt;that_user_password&amp;gt;
+gitlab-runner.exe start
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Easy. Next we need to register it as a &#x27;specific runner&#x27; with GitLab.&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;Get a token for your runner. Go to your repo on GitLab, then Settings -&amp;gt; CI&#x2F;CD and look under &amp;quot;Setup a specific Runner manually&amp;quot; for a registration token. You need that.&lt;&#x2F;li&gt;
+&lt;li&gt;Type &lt;code&gt;gitlab-runner.exe register&lt;&#x2F;code&gt; and...
+&lt;ol&gt;
+&lt;li&gt;Enter &lt;code&gt;https:&#x2F;&#x2F;gitlab.com&lt;&#x2F;code&gt; for the gitlab-ci coordinator&lt;&#x2F;li&gt;
+&lt;li&gt;Enter that token you just copied to your clipboard for the gitlab-ci token&lt;&#x2F;li&gt;
+&lt;li&gt;Enter some descriptive name to help you identify the computer this is running on later&lt;&#x2F;li&gt;
+&lt;li&gt;Enter some tags that this runner will match when running projects&lt;&#x2F;li&gt;
+&lt;li&gt;Enter &lt;code&gt;false&lt;&#x2F;code&gt; to the untagged jobs question&lt;&#x2F;li&gt;
+&lt;li&gt;Enter &lt;code&gt;true&lt;&#x2F;code&gt; when asked if you want to lock to the current project&lt;&#x2F;li&gt;
+&lt;li&gt;Enter &lt;code&gt;shell&lt;&#x2F;code&gt; for the executor&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;Open &#x27;config.toml&#x27; for editing - should be in the same place as gitlab-runner.exe
+&lt;ol&gt;
+&lt;li&gt;Change &lt;code&gt;executor&lt;&#x2F;code&gt; to &#x27;shell&#x27; if it&#x27;s not already set that way&lt;&#x2F;li&gt;
+&lt;li&gt;Change &lt;code&gt;shell&lt;&#x2F;code&gt; to &#x27;powershell&#x27;&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;Now you have a runner for this repo. You can add this runner to other repos by registering it with the token from those repos.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;assemble-your-ci-configuration-file&quot;&gt;Assemble your CI Configuration File&lt;a class=&quot;zola-anchor&quot; href=&quot;#assemble-your-ci-configuration-file&quot; aria-label=&quot;Anchor link for: assemble-your-ci-configuration-file&quot;&gt;§&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;Next you need to configure a &lt;code&gt;.gitlab-ci.yml&lt;&#x2F;code&gt; file that will act as the spellbook for your runner to perform its magic. Here is the file. You can copy and paste it as-is or you can read on and understand how it works.&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;&quot;&gt;
+&lt;code class=&quot;language-yml&quot; data-lang=&quot;yml&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;before_script&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;:
+    - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git submodule update --init --recursive
+
+stages&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;:
+  - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;build
+  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;deploy
+
+
+buildBlog&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;:
+  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;stage&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;build
+  tags&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;:
+    - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;windows
+  only&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;:
+    - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;master
+  script&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;:
+    - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;mkdir -Force ..\Wyam
+    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;#Set powershell to use TLS 1.0,1.1,1.2
+    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;- &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;[Net.ServicePointManager]::SecurityProtocol = &amp;quot;tls12, tls11, tls&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;#39;
+    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;#Get the version of latest Wyam
+    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Invoke-WebRequest &amp;quot;https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;Wyamio&#x2F;Wyam&#x2F;master&#x2F;RELEASE&amp;quot; -outfile ..\Wyam\wyamversion.txt
+    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;$WYAMVERSION = get-content ..\wyam\wyamversion.txt
+    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;write-host $WYAMVERSION
+    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;#Get and unzip the latest version of Wyam
+    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Invoke-WebRequest &amp;quot;https:&#x2F;&#x2F;github.com&#x2F;Wyamio&#x2F;Wyam&#x2F;releases&#x2F;download&#x2F;$WYAMVERSION&#x2F;Wyam-$WYAMVERSION.zip&amp;quot; -OutFile ..\Wyam\Wyam.zip
+    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;7z x &amp;quot;-o..\Wyam&amp;quot; &amp;quot;-aoa&amp;quot; ..\Wyam\Wyam.zip -r
+    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;..\Wyam\wyam --output ..\output
+
+
+pages&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;:
+    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;stage&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;deploy
+    tags&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;:
+      - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;windows
+    only&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;:
+      - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;master
+    script&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;:
+      - &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;if(test-path -path public) {remove-item -force public}&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;#39;
+      - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;mkdir -force public
+      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;copy-item -recurse ..\output\* public
+    artifacts&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;:
+      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;paths&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;:
+        - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;public
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;The &lt;code&gt;before_script&lt;&#x2F;code&gt; section is where the whole thing starts. In our case, this line isn&#x27;t likely needed unless you actually use submodules. This will tell the gitlab runner to recursively update all git submodules before doing anything else.&lt;&#x2F;p&gt;
+&lt;p&gt;The &lt;code&gt;stages&lt;&#x2F;code&gt; section defines two stages to the script, and they will be executed in this order.&lt;&#x2F;p&gt;
+&lt;p&gt;The &lt;code&gt;buildBlog&lt;&#x2F;code&gt; section is where the magic happens. This is the part that Windows is required for. The &lt;code&gt;stage&lt;&#x2F;code&gt; option tells the runner this section is the &#x27;build&#x27; stage. We can supply &lt;code&gt;tags&lt;&#x2F;code&gt; here as well, which will allow gitlab-ci to filter out runners that don&#x27;t support this build. I included &#x27;windows&#x27; because this project has to be run on a windows box and, if you recall from above, we tagged the runner with &#x27;windows&#x27; as well. The &lt;code&gt;only&lt;&#x2F;code&gt; option tells the runner only to pull the &#x27;master&#x27; branch.&lt;&#x2F;p&gt;
+&lt;p&gt;The &lt;code&gt;script&lt;&#x2F;code&gt; sub-section is where the Wyam site is actually generated. It&#x27;s a series of PowerShell commands. It does this stuff:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;Create a directory one level up called Wyam (to store wyam in). This shouldn&#x27;t be in the current directory because the current directory is inside the cloned repo&lt;&#x2F;li&gt;
+&lt;li&gt;Force this powershell instance to use TSL 1.0,1.1,1.2 instead of other cyphers. This lets us talk to github nicely&lt;&#x2F;li&gt;
+&lt;li&gt;Get the version number of the latest Wyam release and save it to a file&lt;&#x2F;li&gt;
+&lt;li&gt;Load that file&#x27;s contents back into a variable&lt;&#x2F;li&gt;
+&lt;li&gt;Print the version number to the console (for when you&#x27;re watching the CI build)&lt;&#x2F;li&gt;
+&lt;li&gt;Download the latest version of Wyam&lt;&#x2F;li&gt;
+&lt;li&gt;Invoke 7zip to unzip the file&lt;&#x2F;li&gt;
+&lt;li&gt;Run the Wyam tool to generate the site&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;div class=&quot;note&quot;&gt;Note: I really don&#x27;t know why I didn&#x27;t just save the Wyam version straight into a variable, but this works so I didn&#x27;t want to change it.&lt;&#x2F;div&gt;
+&lt;p&gt;The &lt;code&gt;pages&lt;&#x2F;code&gt; section is a special section and must be named this way for GitLab to deploy your site to GitLab Pages.&lt;&#x2F;p&gt;
+&lt;p&gt;The &lt;code&gt;stage&lt;&#x2F;code&gt;, &lt;code&gt;tags&lt;&#x2F;code&gt;, and &lt;code&gt;only&lt;&#x2F;code&gt; options are like above.&lt;&#x2F;p&gt;
+&lt;p&gt;The &lt;code&gt;script&lt;&#x2F;code&gt; sub-section does the following:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;Check if the &#x27;public&#x27; folder exists and delete it and its contents if so&lt;&#x2F;li&gt;
+&lt;li&gt;Recreate the &#x27;public&#x27; directory (these steps ensure a clean build)&lt;&#x2F;li&gt;
+&lt;li&gt;Copy all the Wyam output from its location to the &#x27;public&#x27; directory&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;The &lt;code&gt;artifacts&lt;&#x2F;code&gt; sub-section defines what folders actually get uploaded back to the GitLab Pages site. Don&#x27;t change the name from &#x27;public&#x27; because the webserver looks for the &#x27;public&#x27; folder to serve files from.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;act-iii-achieve-greatness-among-the-people&quot;&gt;Act III - Achieve Greatness Among the People&lt;a class=&quot;zola-anchor&quot; href=&quot;#act-iii-achieve-greatness-among-the-people&quot; aria-label=&quot;Anchor link for: act-iii-achieve-greatness-among-the-people&quot;&gt;§&lt;&#x2F;a&gt;
+&lt;&#x2F;h1&gt;
+&lt;p&gt;The next time you push your master branch to the GitLab repo, it should kick off a pipeline, pushing the updated source to your runner, which will compile it into a static site and push it back to GitLab Pages.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;conclusion&quot;&gt;Conclusion&lt;a class=&quot;zola-anchor&quot; href=&quot;#conclusion&quot; aria-label=&quot;Anchor link for: conclusion&quot;&gt;§&lt;&#x2F;a&gt;
+&lt;&#x2F;h1&gt;
+&lt;p&gt;The life of a brave adventurer isn&#x27;t for everyone, but you have achieved greatness. Setting up Wyam for CI, in its current, non-Core state, is not terribly difficult, but can require a bit of research, trial, and error. I have done most of those for you. You may encounter a problem or two, but I am confident you can figure it out.&lt;&#x2F;p&gt;
+</content>
+	</entry>
+</feed>

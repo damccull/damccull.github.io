@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://digitalmccullough.com/sitemap.xml

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <title>Using Wyam on GitLab Pages with Continuous Integration - free-time programmer</title>
+    
+    
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <meta name="description" content="read this stuff I wrote on my blog..."/>
+
+    <meta property="og:title" content="free-time programmer -&nbsp;Using Wyam on GitLab Pages with Continuous Integration" />
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="https:&#x2F;&#x2F;digitalmccullough.com&#x2F;blog&#x2F;wyam-ci-on-gitlab-pages&#x2F;"/>
+    <meta property="og:description" content="Learn to automatically generate and upload your Wyam site to GitLab Pages with only a git push."/>
+    <link rel="preload" href="/assets/fonts/FiraCode-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/assets/fonts/FiraCode-Bold.woff2" as="font" type="font/woff2" crossorigin>
+
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;digitalmccullough.com&#x2F;style.css">
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;digitalmccullough.com&#x2F;color&#x2F;blue.css">
+</head>
+    <body>
+        <div class="container center">
+<header class="header">
+    <div class="header__inner">
+        <div class="header__logo">
+            <a href="&#x2F;">
+    <div class="logo">
+        free-time programmer
+    </div>
+</a>
+        </div>
+        <div class="menu-trigger">menu</div>
+    </div>
+    <div class="subtitle">read this stuff I wrote <sub>on by blog...</sub></div>
+
+    
+    <nav class="menu">
+        <ul class="menu__inner menu__inner--desktop">
+            
+            
+                    <li>
+                        <a href="
+    
+        https:&#x2F;&#x2F;digitalmccullough.com&#x2F;
+    
+">home</a>
+                    </li>
+                
+                    <li>
+                        <a href="
+    
+        https:&#x2F;&#x2F;digitalmccullough.com&#x2F;about&#x2F;
+    
+">about</a>
+                    </li>
+                
+                    <li>
+                        <a href="
+    
+        https:&#x2F;&#x2F;digitalmccullough.com&#x2F;comment-policy&#x2F;
+    
+">comment policy</a>
+                    </li>
+                <ul class="menu__sub-inner">
+                        <li class="menu__sub-inner-more-trigger">more things ▾</li>
+                        <ul class="menu__sub-inner-more hidden">
+                            
+        <li>
+            <a href="
+    
+        https:&#x2F;&#x2F;digitalmccullough.com&#x2F;tags
+    
+">tags</a>
+        </li>
+        <li>
+            <a href="
+    
+        https:&#x2F;&#x2F;digitalmccullough.com&#x2F;categories
+    
+">categories</a>
+        </li>
+                        </ul>
+                    </ul>
+            </ul>
+
+        <ul class="menu__inner menu__inner--mobile">
+            
+        <li>
+            <a href="
+    
+        https:&#x2F;&#x2F;digitalmccullough.com&#x2F;
+    
+">home</a>
+        </li>
+        <li>
+            <a href="
+    
+        https:&#x2F;&#x2F;digitalmccullough.com&#x2F;about&#x2F;
+    
+">about</a>
+        </li>
+        <li>
+            <a href="
+    
+        https:&#x2F;&#x2F;digitalmccullough.com&#x2F;comment-policy&#x2F;
+    
+">comment policy</a>
+        </li>
+        <li>
+            <a href="
+    
+        https:&#x2F;&#x2F;digitalmccullough.com&#x2F;tags
+    
+">tags</a>
+        </li>
+        <li>
+            <a href="
+    
+        https:&#x2F;&#x2F;digitalmccullough.com&#x2F;categories
+    
+">categories</a>
+        </li>
+        </ul>
+    </nav>
+
+    </header>
+<div class="content"><article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https:&#x2F;&#x2F;digitalmccullough.com&#x2F;blog&#x2F;wyam-ci-on-gitlab-pages&#x2F;">Using Wyam on GitLab Pages with Continuous Integration</a>
+            </h1>
+            
+    <div class="post-meta">
+        <span class="post-date">2018.05.03
+                </span>
+
+        <span class="post-author"></span>
+
+        
+
+    
+    :: {<a href="https:&#x2F;&#x2F;digitalmccullough.com&#x2F;categories&#x2F;lessons&#x2F;">Lessons</a>} 
+
+            
+    ::
+    #<a href="https:&#x2F;&#x2F;digitalmccullough.com&#x2F;tags&#x2F;wyam&#x2F;">Wyam</a>
+        
+    #<a href="https:&#x2F;&#x2F;digitalmccullough.com&#x2F;tags&#x2F;website&#x2F;">Website</a>
+        
+    
+            
+        
+    </div>
+
+        </header>
+
+        
+
+        <div class="note">
+    NOTE: Wyam has been supersceded by a project called Statiq. This post is not necessarily accurate any longer and the instructions may or may not work. They will probably not work at all for Statiq.
+</div>
+<h1 id="introduction">Introduction<a class="zola-anchor" href="#introduction" aria-label="Anchor link for: introduction">§</a>
+</h1>
+<p>Continuous Integration with Wyam is a quest many have considered and promptly rejected because...it's hard. It's not natively supported on many platforms because it doesn't run on linux. At least not at the time of this article's publication. But take heart, brave adventurer, for all is not lost! Two possibilites exist to triumph in your quest: either wait for .NET Core support or follow this very tutorial.</p>
+<p>Yes, you heard right! This short tutorial will have you continuously integrating your Wyam site into GitLab pages (and maybe other places with the right modifications (not covered here)) before you know it. Let's get started.</p>
+<h1 id="act-i-setting-out-on-the-quest">Act I - Setting Out on the Quest<a class="zola-anchor" href="#act-i-setting-out-on-the-quest" aria-label="Anchor link for: act-i-setting-out-on-the-quest">§</a>
+</h1>
+<p>First thing's first: I'm not going to hold your hand on every detail. You're a brave adventurer and you can handle a little RTFM and basic setup.</p>
+<p>Now, you need a <a href="https://gitlab.com">gitlab.com</a> account. This will probably work on a self-hosted gitlab as well, but no promises. For this tutorial I recommend just signing up and testing it live.</p>
+<p>You should also <a href="https://docs.gitlab.com/runner/" title="GitLab Runner Documentation">read up on gitlab runners</a> so you understand what they are and what they can do.</p>
+<p>Next you should <a href="https://docs.gitlab.com/ee/user/project/pages/" title="GitLab Pages Documentation">create a GitLab Pages repo</a> to store your generated content and display it to the world. You can fork an existing project (then delete everything) or just create a blank one.</p>
+<p>Lastly, you will need a Windows computer of some kind, with 7-zip installed and on your PATH, to run all the fun on.</p>
+<h1 id="act-ii-meeting-the-monster">Act II - Meeting the Monster<a class="zola-anchor" href="#act-ii-meeting-the-monster" aria-label="Anchor link for: act-ii-meeting-the-monster">§</a>
+</h1>
+<p>Now that you have a GitLab account and a Pages repo set up in it, let's get to work.</p>
+<h2 id="set-up-your-gitlab-runner">Set up your GitLab Runner<a class="zola-anchor" href="#set-up-your-gitlab-runner" aria-label="Anchor link for: set-up-your-gitlab-runner">§</a>
+</h2>
+<p>Download the Windows version of the GitLab runner executable to a Windows machine that you want to use to actually run this stuff and open a command prompt to the location you decide to keep it.</p>
+<p>You should, at this point, read the fine documentation on <a href="https://docs.gitlab.com/runner/install/windows.html" title="Installing GitLab Runner on Windows">Installing GitLab Runner on Windows</a>, but just in case you are being extraordinarily lazy...</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">gitlab-runner.exe install
+gitlab-runner.exe start
+</span></code></pre>
+<p>Above is recommended, but if you want to run NOT run it as the built in system account...</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">gitlab-runner.exe install --user &lt;some.username&gt; --password &lt;that_user_password&gt;
+gitlab-runner.exe start
+</span></code></pre>
+<p>Easy. Next we need to register it as a 'specific runner' with GitLab.</p>
+<ol>
+<li>Get a token for your runner. Go to your repo on GitLab, then Settings -&gt; CI/CD and look under &quot;Setup a specific Runner manually&quot; for a registration token. You need that.</li>
+<li>Type <code>gitlab-runner.exe register</code> and...
+<ol>
+<li>Enter <code>https://gitlab.com</code> for the gitlab-ci coordinator</li>
+<li>Enter that token you just copied to your clipboard for the gitlab-ci token</li>
+<li>Enter some descriptive name to help you identify the computer this is running on later</li>
+<li>Enter some tags that this runner will match when running projects</li>
+<li>Enter <code>false</code> to the untagged jobs question</li>
+<li>Enter <code>true</code> when asked if you want to lock to the current project</li>
+<li>Enter <code>shell</code> for the executor</li>
+</ol>
+</li>
+<li>Open 'config.toml' for editing - should be in the same place as gitlab-runner.exe
+<ol>
+<li>Change <code>executor</code> to 'shell' if it's not already set that way</li>
+<li>Change <code>shell</code> to 'powershell'</li>
+</ol>
+</li>
+</ol>
+<p>Now you have a runner for this repo. You can add this runner to other repos by registering it with the token from those repos.</p>
+<h2 id="assemble-your-ci-configuration-file">Assemble your CI Configuration File<a class="zola-anchor" href="#assemble-your-ci-configuration-file" aria-label="Anchor link for: assemble-your-ci-configuration-file">§</a>
+</h2>
+<p>Next you need to configure a <code>.gitlab-ci.yml</code> file that will act as the spellbook for your runner to perform its magic. Here is the file. You can copy and paste it as-is or you can read on and understand how it works.</p>
+<pre style="background-color:#2b303b;">
+<code class="language-yml" data-lang="yml"><span style="color:#bf616a;">before_script</span><span style="color:#c0c5ce;">:
+    - </span><span style="color:#bf616a;">git submodule update --init --recursive
+
+stages</span><span style="color:#c0c5ce;">:
+  - </span><span style="color:#bf616a;">build
+  </span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">deploy
+
+
+buildBlog</span><span style="color:#c0c5ce;">:
+  </span><span style="color:#bf616a;">stage</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">build
+  tags</span><span style="color:#c0c5ce;">:
+    - </span><span style="color:#bf616a;">windows
+  only</span><span style="color:#c0c5ce;">:
+    - </span><span style="color:#bf616a;">master
+  script</span><span style="color:#c0c5ce;">:
+    - </span><span style="color:#a3be8c;">mkdir -Force ..\Wyam
+    </span><span style="color:#65737e;">#Set powershell to use TLS 1.0,1.1,1.2
+    </span><span style="color:#c0c5ce;">- &#39;</span><span style="color:#a3be8c;">[Net.ServicePointManager]::SecurityProtocol = &quot;tls12, tls11, tls&quot;</span><span style="color:#c0c5ce;">&#39;
+    </span><span style="color:#65737e;">#Get the version of latest Wyam
+    </span><span style="color:#c0c5ce;">- </span><span style="color:#a3be8c;">Invoke-WebRequest &quot;https://raw.githubusercontent.com/Wyamio/Wyam/master/RELEASE&quot; -outfile ..\Wyam\wyamversion.txt
+    </span><span style="color:#c0c5ce;">- </span><span style="color:#a3be8c;">$WYAMVERSION = get-content ..\wyam\wyamversion.txt
+    </span><span style="color:#c0c5ce;">- </span><span style="color:#a3be8c;">write-host $WYAMVERSION
+    </span><span style="color:#65737e;">#Get and unzip the latest version of Wyam
+    </span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">Invoke-WebRequest &quot;https://github.com/Wyamio/Wyam/releases/download/$WYAMVERSION/Wyam-$WYAMVERSION.zip&quot; -OutFile ..\Wyam\Wyam.zip
+    </span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">7z x &quot;-o..\Wyam&quot; &quot;-aoa&quot; ..\Wyam\Wyam.zip -r
+    </span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">..\Wyam\wyam --output ..\output
+
+
+pages</span><span style="color:#c0c5ce;">:
+    </span><span style="color:#bf616a;">stage</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">deploy
+    tags</span><span style="color:#c0c5ce;">:
+      - </span><span style="color:#bf616a;">windows
+    only</span><span style="color:#c0c5ce;">:
+      - </span><span style="color:#bf616a;">master
+    script</span><span style="color:#c0c5ce;">:
+      - &#39;</span><span style="color:#a3be8c;">if(test-path -path public) {remove-item -force public}</span><span style="color:#c0c5ce;">&#39;
+      - </span><span style="color:#bf616a;">mkdir -force public
+      </span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">copy-item -recurse ..\output\* public
+    artifacts</span><span style="color:#c0c5ce;">:
+      </span><span style="color:#bf616a;">paths</span><span style="color:#c0c5ce;">:
+        - </span><span style="color:#a3be8c;">public
+</span></code></pre>
+<p>The <code>before_script</code> section is where the whole thing starts. In our case, this line isn't likely needed unless you actually use submodules. This will tell the gitlab runner to recursively update all git submodules before doing anything else.</p>
+<p>The <code>stages</code> section defines two stages to the script, and they will be executed in this order.</p>
+<p>The <code>buildBlog</code> section is where the magic happens. This is the part that Windows is required for. The <code>stage</code> option tells the runner this section is the 'build' stage. We can supply <code>tags</code> here as well, which will allow gitlab-ci to filter out runners that don't support this build. I included 'windows' because this project has to be run on a windows box and, if you recall from above, we tagged the runner with 'windows' as well. The <code>only</code> option tells the runner only to pull the 'master' branch.</p>
+<p>The <code>script</code> sub-section is where the Wyam site is actually generated. It's a series of PowerShell commands. It does this stuff:</p>
+<ol>
+<li>Create a directory one level up called Wyam (to store wyam in). This shouldn't be in the current directory because the current directory is inside the cloned repo</li>
+<li>Force this powershell instance to use TSL 1.0,1.1,1.2 instead of other cyphers. This lets us talk to github nicely</li>
+<li>Get the version number of the latest Wyam release and save it to a file</li>
+<li>Load that file's contents back into a variable</li>
+<li>Print the version number to the console (for when you're watching the CI build)</li>
+<li>Download the latest version of Wyam</li>
+<li>Invoke 7zip to unzip the file</li>
+<li>Run the Wyam tool to generate the site</li>
+</ol>
+<div class="note">Note: I really don't know why I didn't just save the Wyam version straight into a variable, but this works so I didn't want to change it.</div>
+<p>The <code>pages</code> section is a special section and must be named this way for GitLab to deploy your site to GitLab Pages.</p>
+<p>The <code>stage</code>, <code>tags</code>, and <code>only</code> options are like above.</p>
+<p>The <code>script</code> sub-section does the following:</p>
+<ol>
+<li>Check if the 'public' folder exists and delete it and its contents if so</li>
+<li>Recreate the 'public' directory (these steps ensure a clean build)</li>
+<li>Copy all the Wyam output from its location to the 'public' directory</li>
+</ol>
+<p>The <code>artifacts</code> sub-section defines what folders actually get uploaded back to the GitLab Pages site. Don't change the name from 'public' because the webserver looks for the 'public' folder to serve files from.</p>
+<h1 id="act-iii-achieve-greatness-among-the-people">Act III - Achieve Greatness Among the People<a class="zola-anchor" href="#act-iii-achieve-greatness-among-the-people" aria-label="Anchor link for: act-iii-achieve-greatness-among-the-people">§</a>
+</h1>
+<p>The next time you push your master branch to the GitLab repo, it should kick off a pipeline, pushing the updated source to your runner, which will compile it into a static site and push it back to GitLab Pages.</p>
+<h1 id="conclusion">Conclusion<a class="zola-anchor" href="#conclusion" aria-label="Anchor link for: conclusion">§</a>
+</h1>
+<p>The life of a brave adventurer isn't for everyone, but you have achieved greatness. Setting up Wyam for CI, in its current, non-Core state, is not terribly difficult, but can require a bit of research, trial, and error. I have done most of those for you. You may encounter a problem or two, but I am confident you can figure it out.</p>
+
+
+        
+    
+        
+
+    <div id="disqus_thread"></div>
+    <script>
+        /**
+        *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+        *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+        
+        var disqus_config = function () {
+            this.page.url = 'https://digitalmccullough.com/blog/wyam-ci-on-gitlab-pages/';  // Replace PAGE_URL with your page's canonical URL variable
+            this.page.identifier = 'https://digitalmccullough.com/blog/wyam-ci-on-gitlab-pages/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        };
+        
+        (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        s.src = 'https://digitalmccullough.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+    
+
+        
+        
+    </article></div>
+            
+    <div class="pagination">
+        <div class="pagination__buttons">
+            </div>
+    </div>
+<footer class="footer">
+                    <div class="footer__inner"><div class="copyright copyright--user">Copyright &copy; 2021 :: Powered by Zola</div>
+    <script type="text/javascript" src="https:&#x2F;&#x2F;digitalmccullough.com&#x2F;assets&#x2F;js&#x2F;main.js"></script>
+</div>
+                    
+
+                </footer></div>
+    </body>
+</html>
