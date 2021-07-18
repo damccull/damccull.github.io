@@ -68,7 +68,7 @@ There are some prerequisites for doing this:
 3. Type `mkdir ~/Signum && cd ~/Signum` to create and navigate to a new folder in your home folder.
 4. Type `nano -w docker-compose.yml` to create a new file and open it. Paste the following in there.
 
-```Dockerfile
+```yml
 version: "3.8"
 services:
   brs:
