@@ -11,7 +11,7 @@ tags = ["Signum", "Proof of Capacity"]
 categories = ["CryptoCurrency"]
 +++
 
-<div class="note">Update: This article originally talked about Signum's old name, Burstcoin. It has been updated to reference Signum wherever the name Burstcoin was, and a portion of the background was rewritten to be more relevant.</div>
+<div class="note">Update: This article originally talked about Signum's old name, Burstcoin. It has been updated to reference Signum in most places, a portion of the background was rewritten to be more relevant, and links were updated to point at new Signum locations.</div>
 
 # A Bit of Background
 ## Traditional Cryptocurrency
@@ -124,10 +124,10 @@ To start earning the NDS-A, you need to ensure a few things are set up properly.
 # End of Line
 In this article, I explained how to fully set up a Signum full node and even earn yourself some NDS-A Signums. There's a lot I didn't cover, so if you have additional questions, please join the community on [Discord][discord-join-link].
 
-[Signum-download]: https://github.com/burst-apps-team/Signum/releases/latest "Signum Downloads"
+[Signum-download]: https://github.com/signum-network/signum-node/releases/latest "Signum Downloads"
 [jportable]: https://portableapps.com/apps/utilities/java_portable "jPortable"
 [docker-install-instructions]: https://docs.docker.com/install/ "Docker Install Instructions"
 [docker-install-instructions-ubuntu]: https://docs.docker.com/install/linux/docker-ce/ubuntu/ "Docker Install Instructions for Ubuntu"
 [docker-get-started]: https://docs.docker.com/get-started/ "Docker's Get Started Tutorial"
 [docker-compose-install]: https://docs.docker.com/compose/install/#install-compose-on-linux-systems "Install docker-compose on Linux"
-[discord-join-link]: https://discord.gg/aBFeCNPgQd "Official Signum Discord"
+[discord-join-link]: https://discord.gg/eVFRx7DECX "Official Signum Discord"
