@@ -46,12 +46,12 @@ If you're like me, however, you believe Java is a giant security hole that shoul
     2. Click `Next`, then agree to the terms
     3. Create a new folder called `Java` in your Signum folder (right next to Signum.exe)
     4. Set the `Destination Folder` to the Java folder you just created and click `Install`
-2. Create a new file in the Signum folder (right next to Signum.exe) and name it `burst.bat`
-3. Open `burst.bat` in a text editor and copy this command into it, then save and close it:
+2. Create a new file in the Signum folder (right next to Signum.exe) and name it `signum.bat`
+3. Open `signum.bat` in a text editor and copy this command into it, then save and close it:
 ```batch
 start .\Java\bin\javaw.exe -jar burst.jar
 ```
-4. Double click `burst.bat` and you should see the Signum Node log window appear.
+4. Double click `signum.bat` and you should see the BRS log window appear.
 
 Congratulations, you've installed and started the Signum Reference Software for the first time. After a couple seconds of it running, 3 buttons will appear. The node will function fully as is but there is an opportunity to earn a few free Signums per day from the NDS-A. Scroll past the Linux section to read up on how.
 # Linux is Also Easy...and Harder, Depending
