@@ -11,7 +11,7 @@ tags = ["Signum", "Proof of Capacity"]
 categories = ["CryptoCurrency"]
 +++
 
-<div class="note">Update: This article originally talked about Signum's old name, Burstcoin. It has been updated to reference Signum in most places, a portion of the background was rewritten to be more relevant, and links were updated to point at new Signum locations.</div>
+<div class="note">Update: This article originally talked about Signum's old names: Burstcoin, Burst, and Burst Reference Software (BRS). It has been updated to reference Signum and Signum Node (for the software) in most places. A portion of the background was rewritten to be more relevant, and links were updated to point at new Signum locations.</div>
 
 <div class="note">Important note: a few places here mention `burst.exe` and `burst.jar`. At the time of this update, these are accurate, but the files will eventually be renamed to `signum.exe` and `signum.jar`. If you have those file names, use them in places of the burst variants.</div>
 
@@ -51,14 +51,14 @@ If you're like me, however, you believe Java is a giant security hole that shoul
 ```batch
 start .\Java\bin\javaw.exe -jar burst.jar
 ```
-4. Double click `burst.bat` and you should see the BRS log window appear.
+4. Double click `burst.bat` and you should see the Signum Node log window appear.
 
 Congratulations, you've installed and started the Signum Reference Software for the first time. After a couple seconds of it running, 3 buttons will appear. The node will function fully as is but there is an opportunity to earn a few free Signums per day from the NDS-A. Scroll past the Linux section to read up on how.
 # Linux is Also Easy...and Harder, Depending
 
 Earlier I mentioned that you can use the same download for both Windows and Linux. Under Linux you'll launch the burst.jar file directly by running `java -jar burst.jar` from inside the Signum folder using a terminal. You could probably also make the jar file executable by typing `chmod +x burst.jar` and then double-clicking it in the file explorer.
 
-Or you could use Docker. I will show you how to run the BRS in docker because it makes things easy and provides the same environment for all Linux platforms, regardless of the distribution. This way will also run headless. You won't get the same console UI you see in the Windows version.
+Or you could use Docker. I will show you how to run the Signum Node in docker because it makes things easy and provides the same environment for all Linux platforms, regardless of the distribution. This way will also run headless. You won't get the same console UI you see in the Windows version.
 
 There are some prerequisites for doing this:
 
@@ -94,13 +94,13 @@ volumes:
 ```
 
 5. Press `ctrl-x` then `y` to close and save the file.
-6. Type `curl -L -o ~/Signum/brs.properties https://raw.githubusercontent.com/burst-apps-team/Signum/v3.0/conf/brs-default.properties` to download the BRS 3.0.0 default config file to your computer.
-7. Type `docker-compose up -d` to launch the BRS software.
+6. Type `curl -L -o ~/Signum/brs.properties https://raw.githubusercontent.com/burst-apps-team/Signum/v3.0/conf/brs-default.properties` to download the Signum Node 3.0.0 default config file to your computer.
+7. Type `docker-compose up -d` to launch the Signum Node software.
 8. You may now browse to "localhost:8125" and log into either the Phoenix or Classic wallets.
 
 Congratulations, you've installed and started the Signum Reference Software, running headless under Docker. The node will function fully as is but there is an opportunity to earn a few free Signums per day from the NDS-A. See the next section on how.
 
-You'll need to shut down the BRS and restart it if you make configuration changes in the brs.properties file. You can do that with `docker-compose down` while in the Signum folder.
+You'll need to shut down the Signum Node and restart it if you make configuration changes in the brs.properties file. You can do that with `docker-compose down` while in the Signum folder.
 
 # Network Distribution Strengthen-Award (NDS-A)
 Back in December, 2018, an organization called the Burst Marketing Fund started giving out payments to all full node operators who met specific requirements. It's still going on and will net you a couple free Signums per day just for operating a full node, which is what you set up earlier. Might as well get paid for it.
@@ -109,19 +109,19 @@ Back in December, 2018, an organization called the Burst Marketing Fund started 
 
 To start earning the NDS-A, you need to ensure a few things are set up properly.
 
-1. You need the latest version of the BRS. You just downloaded and set this up so you should be fine there.
+1. You need the latest version of the Signum Node. You just downloaded and set this up so you should be fine there.
 2. You need to make a few changes in your configuration file.
-    1. In the BRS window, click the `Edit conf file` button. It should open a text editor to the configuration file.
-    2. In the BRS window, also click the `Phoenix Wallet` button. It will open a web page to the new Phoenix Signum wallet. Either create a new account or import an existing one. If you're setting up a full node, you probably already have an account. If not, please ask on the official [Discord][discord-join-link] for help getting this done.
+    1. In the Signum Node window, click the `Edit conf file` button. It should open a text editor to the configuration file.
+    2. In the Signum Node window, also click the `Phoenix Wallet` button. It will open a web page to the new Phoenix Signum wallet. Either create a new account or import an existing one. If you're setting up a full node, you probably already have an account. If not, please ask on the official [Discord][discord-join-link] for help getting this done.
     3. Log into the Phoenix wallet with your account.
     4. On the top left of the Phoenix wallet is a pretty little icon below your Signum address. Copy the Signum address by either selecting it and pressing CTRL-C on the keyboard, or clicking the dropdown below the icon and clicking `Copy Address`.
     5. In the configuration file you opened in step 1, find the line that says `P2P.myPlatform = PC` and replace the `PC` portion with your Signum address.
     6. Still in the configuration file, find the line that says `P2P.shareMyAddress =` and change it to say `P2P.shareMyAddress = yes`.
-    7. UPnP might automatically work, but I suggest following your router's instructions (found on the internet) to manually forward port `8123` to the computer running this new BRS node.
+    7. UPnP might automatically work, but I suggest following your router's instructions (found on the internet) to manually forward port `8123` to the computer running this new Signum Node node.
     8. Ensure your node stays up all the time. NDS-A only distributes to online nodes.
 3. Lastly, check the [Signum Network Explorer](https://explorer.Signum.network/?action=network_status) and search for your IP or your Signum address. Look for a `Yes` in the NDS-A column to verify that you will be receiving the award.
 
-<div class="note">Note: You will not receive NDS-A awards until your node is FULLY SYNCHRONIZED with the network. That can take several hours to a day. You can follow the status of your sync by watching the percentage progress bar in the bottom right of the BRS console window.</div>
+<div class="note">Note: You will not receive NDS-A awards until your node is FULLY SYNCHRONIZED with the network. That can take several hours to a day. You can follow the status of your sync by watching the percentage progress bar in the bottom right of the Signum Node console window.</div>
 
 # End of Line
 In this article, I explained how to fully set up a Signum full node and even earn yourself some NDS-A Signums. There's a lot I didn't cover, so if you have additional questions, please join the community on [Discord][discord-join-link].
