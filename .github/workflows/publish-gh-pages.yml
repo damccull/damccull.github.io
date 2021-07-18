@@ -1,5 +1,8 @@
 # Execute this workflow on every push
-on: push
+on:
+  push:
+    branches:
+      - "main"
 
 name: Build and Deploy GH Pages
 jobs:
