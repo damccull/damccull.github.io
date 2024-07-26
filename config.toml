@@ -1,8 +1,8 @@
 # The URL the site will be built for
-base_url = "https://particle.vercel.app"
+base_url = "https://digitalmccullough.com"
 
-title = "A blog about lorem ipsum dolor sit amet"
-description = "A blog about lorem ipsum dolor sit amet"
+title = "digitalmccullough.com"
+description = "David McCulluogh | IT Expert | Freetime Programmer"
 
 # Whether to automatically compile all Sass files in the sass directory
 compile_sass = true
@@ -19,9 +19,9 @@ default_language = "en"
 
 [extra]
 # User settings
-username = "Anon Developer"
+username = "David McCullough"
 user_description = "Bicycle rights irony actually neutra typewriter lyft. Man bun taxidermy put a bird on it, umami yr ramps pop-up ugh bushwick chia lo-fi. Occupy bitters pour-over snackwave you probably haven't heard of them small batch. Cornhole mustache man bun letterpress echo park VHS."
-user_title = "Software Developer"
+user_title = "IT Expert | Freetime Programmer | Software Developer"
 email = "anon@anon.com"
 twitter_username = "lorem_ipsum"
 github_username =  "lorem_ipsum"
