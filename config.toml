@@ -1,7 +1,7 @@
 # The URL the site will be built for
 base_url = "https://digitalmccullough.com"
 
-title = "digitalmccullough.com"
+title = "David McCullough"
 description = "David McCulluogh | IT Expert | Freetime Programmer"
 
 # Whether to automatically compile all Sass files in the sass directory
@@ -20,9 +20,9 @@ default_language = "en"
 [extra]
 # User settings
 username = "David McCullough"
-user_description = "Bicycle rights irony actually neutra typewriter lyft. Man bun taxidermy put a bird on it, umami yr ramps pop-up ugh bushwick chia lo-fi. Occupy bitters pour-over snackwave you probably haven't heard of them small batch. Cornhole mustache man bun letterpress echo park VHS."
-user_title = "IT Expert | Freetime Programmer | Software Developer"
-email = "anon@anon.com"
+user_description = "Various things I'm an expert at."
+user_title = "IT Expert | Freetime Programmer"
+email = "freetimeprogrammer@digitalmccullough.com"
 twitter_username = "lorem_ipsum"
 github_username =  "lorem_ipsum"
 gplus_username =  "lorem_ipsum"
