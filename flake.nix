@@ -9,8 +9,7 @@
       perSystem = { config, self', pkgs, lib, system, ... }:
         let
           devDeps = with pkgs; [
-            cargo
-            cargo-watch
+            watchexec
             zola
           ];
           mkDevShell = arg1:
