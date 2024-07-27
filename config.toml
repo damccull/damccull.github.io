@@ -21,7 +21,7 @@ default_language = "en"
 # User settings
 username = "David McCullough"
 user_description = "Various things I'm an expert at."
-user_title = "IT Expert | Freetime Programmer"
+user_title = "IT Expert | Programmer"
 email = "freetimeprogrammer@digitalmccullough.com"
 twitter_username = "lorem_ipsum"
 github_username =  "lorem_ipsum"
