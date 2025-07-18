@@ -1,0 +1,32 @@
+layout {
+  tab focus=true {
+    pane size=1 borderless=true {
+      plugin location="zellij:tab-bar"
+    }
+    pane split_direction="vertical" {
+      pane {
+        focus true
+      }
+      pane split_direction="horizontal" {
+        pane size="60%" {
+          command "lazygit"
+        }
+      }
+    }
+    pane size=2 borderless=true {
+      plugin location="zellij:status-bar"
+    }
+  }
+  tab {
+    pane size=1 borderless=true {
+      plugin location="zellij:tab-bar"
+    }
+    pane {
+      command "zola"
+      args "serve"
+    }
+    pane size=2 borderless=true {
+      plugin location="zellij:status-bar"
+    }
+  }
+}
