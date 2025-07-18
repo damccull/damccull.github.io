@@ -24,7 +24,9 @@
           mkDevShell =
             arg1:
             pkgs.mkShell {
-              shellHook = '''';
+              shellHook = ''
+                exec env SHELL=${pkgs.bashInteractive}/bin/bash zellij --layout ./zellij_layout.kdl
+              '';
               LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
               nativeBuildInputs = devDeps ++ [ arg1 ];
             };
